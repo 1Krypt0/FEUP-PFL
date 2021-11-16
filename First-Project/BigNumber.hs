@@ -22,3 +22,6 @@ somaBN n1 n2 = scanner (show (read (output n1) + read (output n2)))
 
 subBN :: BigNumber -> BigNumber -> BigNumber
 subBN n1 n2 = scanner (show (read (output n1) + ((-1) * read (output n2))))
+
+mulBN :: BigNumber -> BigNumber -> BigNumber
+mulBN n1 n2 = scanner (show (read (output n1) * read (output n2)))
