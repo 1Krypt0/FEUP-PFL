@@ -10,7 +10,7 @@ fibRec n
 fibLista :: (Integral a) => a -> a
 fibLista n = fibs !! fromIntegral n
   where
-    fibs = 0 : 1 : zipWith (+) fibs (drop 1 fibs)
+    fibs = 0 : 1 : [fibs !! fromIntegral(i-1) + fibs !! fromIntegral(i-2) | i <- [2 .. n]]
 
 fibListaInfinita :: (Integral a) => a -> a
 fibListaInfinita n = fibs !! fromIntegral n
