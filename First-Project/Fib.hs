@@ -8,7 +8,7 @@ fibRec n
 fibLista :: (Integral a) => a -> a
 fibLista n = fibs !! fromIntegral n
   where
-    fibs = 0 : 1 : [fibs !! fromIntegral (x - 1) + fibs !! fromIntegral (x - 2) | x <- [2 .. n]]
+    fibs = 0 : 1 : [fibs !! fromIntegral (i -1) + fibs !! fromIntegral (i -2) | i <- [2 .. n]]
 
 fibListaInfinita :: (Integral a) => a -> a
 fibListaInfinita n = fibs !! fromIntegral n
