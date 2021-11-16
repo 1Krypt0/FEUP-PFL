@@ -16,3 +16,9 @@ scanner :: String -> BigNumber
 scanner str
   | head str == '-' = (False, digs (read (tail str)))
   | otherwise = (True, digs (read str))
+
+somaBN :: BigNumber -> BigNumber -> BigNumber
+somaBN n1 n2 = scanner (show (read (output n1) + read (output n2)))
+
+subBN :: BigNumber -> BigNumber -> BigNumber
+subBN n1 n2 = scanner (show (read (output n1) + ((-1) * read (output n2))))
