@@ -1,4 +1,3 @@
-{- Recursive version of the Fibonnaci sequence-}
 fibRec :: (Integral a) => a -> a
 fibRec n
   | n == 0 = 0
@@ -6,11 +5,10 @@ fibRec n
   | n > 1 = fibRec (n - 1) + fibRec (n - 2)
   | otherwise = error "Invalid argument"
 
-{-Find a way to store the used values in the fibs function without being an infinite list-}
 fibLista :: (Integral a) => a -> a
 fibLista n = fibs !! fromIntegral n
   where
-    fibs = 0 : 1 : zipWith (+) fibs (drop 1 fibs)
+    fibs = 0 : 1 : [fibs !! fromIntegral (x - 1) + fibs !! fromIntegral (x - 2) | x <- [2 .. n]]
 
 fibListaInfinita :: (Integral a) => a -> a
 fibListaInfinita n = fibs !! fromIntegral n
