@@ -58,11 +58,27 @@ negativeSum n1 n2
 
 normalSub :: BigNumber -> BigNumber -> BigNumber
 normalSub n1 n2
-  | gt (snd n1) (snd n2) = (True, snd (normalSub n1 n2))
-  | otherwise = (False, snd (normalSub n2 n1))
+  | gt (snd n1) (snd n2) = (True, normalSubAux (snd n1) (stuffZeroes (snd n2) (snd n1)) [] 0)
+  | otherwise = (False, normalSubAux (snd n2) (stuffZeroes (snd n1) (snd n2)) [] 0)
 
-normalSubAux :: [Digit] -> [Digit] -> [Digit]
-normalSubAux n1 n2 = num2
+normalSubAux :: [Digit] -> [Digit] -> [Digit] -> Digit -> [Digit]
+normalSubAux (x : xs) (y : ys) res borrow
+  | (x - borrow) < y = normalSubAux xs ys ((((x - borrow) + 10) - y) : res) 1
+  | otherwise = normalSubAux xs ys (((x - borrow) - y) : res) 0
+normalSubAux [] _ res _ = res
+normalSubAux _ [] res _ = res
+
+{-
   where
-    num1 = [x + 10 | x <- n1]
+    res = [mod (x - (y + z)) 10 | (x, y, z) <- zip3 n1 num2 borrow]
     num2 = n2 ++ stuffZeroes n2 n1
+    borrow = 0 : [if n < 0 then 1 else 0 | n <- zipWith (-) n1 num2]
+-}
+
+{- fazer sub
+verificar se < 0
+se sim, subtrair 1 ao proximo elemento de n1
+adicionar 10 ao resultado de sub
+next
+-}
+-- create borrow array if num1 is bigger fill with 1, else 0 and then subtract the borrow
