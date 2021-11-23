@@ -1,4 +1,5 @@
 import Data.Text.Internal.Read (digitToInt)
+import GHC.Integer.GMP.Internals (exportBigNatToMutableByteArray)
 import Utils (dropTrailingZeroes, eq, gt, stuffZeroes, xor)
 
 type Digit = Integer
@@ -85,4 +86,35 @@ normalSubAux (x : xs) (y : ys) res borrow
 normalSubAux [] _ res _ = res
 normalSubAux _ [] res _ = res
 
--- create borrow array if num1 is bigger fill with 1, else 0 and then subtract the borrow
+-- DIVISION
+first :: (a, b, c, d) -> a
+first (x, y, z, u) = x
+
+second :: (a, b, c, d) -> b
+second (x, y, z, u) = y
+
+divBN :: BigNumber -> BigNumber -> (BigNumber, BigNumber)
+divBN n1 n2 = (first res, second res)
+  where
+    res = divBNAux (num2, num1, num2, (True, [0]))
+    num1 = (fst n1, reverse (snd n1))
+    num2 = (fst n2, reverse (snd n2))
+
+divBNAux :: (BigNumber, BigNumber, BigNumber, BigNumber) -> (BigNumber, BigNumber, BigNumber, BigNumber)
+divBNAux (a, b, c, d) = ((True, [0]), (True, [0]), (True, [0]), (True, [0])) --until (\(a, b, c, d) -> not (greaterThan c b) && not (equal c b)) add (a, b, c, d)
+
+{-
+  where
+    bigger = not (greaterThan c b) && not (equal c b)
+    add = somaBN first (True, [1])
+    addQuocient = somaBN d (True, [1])
+    subAcc = subBN c a
+-}
+
+greaterThan :: BigNumber -> BigNumber -> Bool
+greaterThan (True, _) (False, _) = True
+greaterThan (False, _) (True, _) = False
+greaterThan x y = gt (snd x) (snd y)
+
+equal :: BigNumber -> BigNumber -> Bool
+equal a b = (fst a == fst b) && (snd a == snd b)
