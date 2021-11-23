@@ -22,5 +22,8 @@ eq (x : xs) (y : ys)
 dropTrailingZeroes :: [Integer] -> [Integer]
 dropTrailingZeroes l = reverse (dropWhile (== 0) (reverse l))
 
+dropLeadingZeroes :: [Integer] -> [Integer]
+dropLeadingZeroes = dropWhile (== 0)
+
 stuffZeroes :: [Integer] -> [Integer] -> [Integer]
 stuffZeroes l remainder = replicate (length remainder - length l) 0

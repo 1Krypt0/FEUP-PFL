@@ -1,6 +1,7 @@
+module BigNumber where
+
 import Data.Text.Internal.Read (digitToInt)
-import GHC.Integer.GMP.Internals (exportBigNatToMutableByteArray)
-import Utils (dropTrailingZeroes, eq, gt, stuffZeroes, xor)
+import Utils (dropLeadingZeroes, dropTrailingZeroes, eq, gt, stuffZeroes, xor)
 
 type Digit = Integer
 
@@ -75,9 +76,9 @@ negativeSum n1 n2
 
 normalSub :: BigNumber -> BigNumber -> BigNumber
 normalSub n1 n2
-  | gt (reverse (snd n1)) (reverse (snd n2)) = (True, normalSubAux (snd n1) (snd n2 ++ stuffZeroes (snd n2) (snd n1)) [] 0)
+  | gt (reverse (snd n1)) (reverse (snd n2)) = (True, dropLeadingZeroes (normalSubAux (snd n1) (snd n2 ++ stuffZeroes (snd n2) (snd n1)) [] 0))
   | eq (reverse (snd n1)) (reverse (snd n2)) = (True, [0])
-  | otherwise = (False, normalSubAux (snd n2) (snd n1 ++ stuffZeroes (snd n1) (snd n2)) [] 0)
+  | otherwise = (False, dropLeadingZeroes (normalSubAux (snd n2) (snd n1 ++ stuffZeroes (snd n1) (snd n2)) [] 0))
 
 normalSubAux :: [Digit] -> [Digit] -> [Digit] -> Digit -> [Digit]
 normalSubAux (x : xs) (y : ys) res borrow
