@@ -4,12 +4,19 @@ xor :: Bool -> Bool -> Bool
 xor a b = (a && not b) || (not a && b)
 
 gt :: [Integer] -> [Integer] -> Bool
-gt [] [] = False
-gt _ [] = True
 gt [] _ = False
+gt _ [] = True
 gt (x : xs) (y : ys)
+  | length xs > length ys = True
+  | length xs < length ys = False
   | x > y = True
   | x == y = gt xs ys
+  | otherwise = False
+
+eq :: [Integer] -> [Integer] -> Bool
+eq [] [] = True
+eq (x : xs) (y : ys)
+  | x == y = eq xs ys
   | otherwise = False
 
 dropTrailingZeroes :: [Integer] -> [Integer]
