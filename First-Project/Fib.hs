@@ -24,7 +24,8 @@ fibRecBN n
   | greaterThan n (True, [1]) = somaBN (fibRecBN (subBN n (True, [1]))) (fibRecBN (subBN n (True, [2])))
   | otherwise = error "Invalid BigNumber"
 
-fibListaBN :: BigNumber -> BigNumber
+{-fibListaBN :: BigNumber -> BigNumber
 fibListaBN n = fibs !! read (output n)
   where
     fibs = (True, [0]) : (True, [1]) : [somaBN (fibs !! fromIntegral (read (output i) - 1)) (fibs !! fromIntegral (read (output i) - 2)) | i <- [(True, [2]) .. n]]
+-}

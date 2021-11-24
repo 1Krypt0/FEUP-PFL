@@ -37,14 +37,23 @@ somaAux n1 n2
 
 positiveSum :: BigNumber -> BigNumber -> BigNumber
 positiveSum n1 n2
-  | fst n1 && fst n2 = (True, reverse (dropTrailingZeroes res))
-  | not (fst n1) && not (fst n2) = (False, reverse (dropTrailingZeroes res))
+  | fst n1 && fst n2 = (True, reverse (dropTrailingZeroes (positiveSumAux num1 num2 [] 0)))
+  | not (fst n1) && not (fst n2) = (False, reverse (dropTrailingZeroes (positiveSumAux num1 num2 [] 0)))
   | otherwise = error "Invalid input"
   where
-    res = [mod (x + y + z) 10 | (x, y, z) <- zip3 num1 num2 remainder]
-    remainder = 0 : [if n >= 10 then 1 else 0 | n <- zipWith (+) (snd n1) (snd n2)]
-    num1 = snd n1 ++ stuffZeroes (snd n1) remainder
-    num2 = snd n2 ++ stuffZeroes (snd n2) remainder
+    len = max (length (snd n1)) (length (snd n2)) - min (length (snd n1)) (length (snd n2))
+    num1 = smallest ++ stuffZeroes (fromIntegral len)
+    num2 = largest
+    smallest = if min (length (snd n1)) (length (snd n2)) == length (snd n1) then snd n1 else snd n2
+    largest = if smallest == snd n1 then snd n2 else snd n1
+
+positiveSumAux :: [Digit] -> [Digit] -> [Digit] -> Digit -> [Digit]
+positiveSumAux (x : xs) (y : ys) res carry
+  | (x + y + carry) >= 10 = positiveSumAux xs ys (res ++ [x + y + carry - 10]) 1
+  | otherwise = positiveSumAux xs ys (res ++ [x + y + carry]) 0
+positiveSumAux [] [] res 1 = res ++ [1]
+positiveSumAux _ [] res _ = res
+positiveSumAux [] _ res _ = res
 
 -- SUB
 
@@ -76,9 +85,9 @@ negativeSum n1 n2
 
 normalSub :: BigNumber -> BigNumber -> BigNumber
 normalSub n1 n2
-  | gt (reverse (snd n1)) (reverse (snd n2)) = (True, dropLeadingZeroes (normalSubAux (snd n1) (snd n2 ++ stuffZeroes (snd n2) (snd n1)) [] 0))
+ -- | gt (reverse (snd n1)) (reverse (snd n2)) = (True, dropLeadingZeroes (normalSubAux (snd n1) (snd n2 ++ stuffZeroes (snd n2) (snd n1)) [] 0))
   | eq (reverse (snd n1)) (reverse (snd n2)) = (True, [0])
-  | otherwise = (False, dropLeadingZeroes (normalSubAux (snd n2) (snd n1 ++ stuffZeroes (snd n1) (snd n2)) [] 0))
+  -- | otherwise = (False, dropLeadingZeroes (normalSubAux (snd n2) (snd n1 ++ stuffZeroes (snd n1) (snd n2)) [] 0))
 
 normalSubAux :: [Digit] -> [Digit] -> [Digit] -> Digit -> [Digit]
 normalSubAux (x : xs) (y : ys) res borrow
