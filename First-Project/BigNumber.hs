@@ -1,7 +1,6 @@
 module BigNumber where
 
 import Data.Text.Internal.Read (digitToInt)
-import Distribution.Utils.Generic (dropWhileEndLE)
 import Utils (dropLeadingZeroes, dropTrailingZeroes, eq, gt, stuffZeroes, xor)
 
 type Digit = Integer
@@ -91,7 +90,7 @@ normalSub n1 n2
   | otherwise = (False, dropLeadingZeroes (normalSubAux num2 num1 [] 0))
   where
     smallest = if largest == snd n1 then snd n2 else snd n1
-    largest = if gt (snd n1) (snd n2) then snd n1 else snd n2
+    largest = if gt (reverse (snd n1)) (reverse (snd n2)) then snd n1 else snd n2
     len = length largest - length smallest
     num1 = smallest ++ stuffZeroes (fromIntegral len)
     num2 = largest
