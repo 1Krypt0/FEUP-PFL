@@ -36,6 +36,7 @@ somaAux n1 n2
   | otherwise = error "Invalid BigNumber"
 
 positiveSum :: BigNumber -> BigNumber -> BigNumber
+positiveSum (_, [0]) (_, [0]) = (True, [0])
 positiveSum n1 n2
   | fst n1 && fst n2 = (True, reverse (dropTrailingZeroes (positiveSumAux num1 num2 [] 0)))
   | not (fst n1) && not (fst n2) = (False, reverse (dropTrailingZeroes (positiveSumAux num1 num2 [] 0)))
