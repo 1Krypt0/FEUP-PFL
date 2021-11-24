@@ -1,6 +1,7 @@
 module BigNumber where
 
 import Data.Text.Internal.Read (digitToInt)
+import Distribution.Utils.Generic (dropWhileEndLE)
 import Utils (dropLeadingZeroes, dropTrailingZeroes, eq, gt, stuffZeroes, xor)
 
 type Digit = Integer
@@ -41,7 +42,7 @@ positiveSum n1 n2
   | not (fst n1) && not (fst n2) = (False, reverse (dropTrailingZeroes (positiveSumAux num1 num2 [] 0)))
   | otherwise = error "Invalid input"
   where
-    len = max (length (snd n1)) (length (snd n2)) - min (length (snd n1)) (length (snd n2))
+    len = length largest - length smallest
     num1 = smallest ++ stuffZeroes (fromIntegral len)
     num2 = largest
     smallest = if min (length (snd n1)) (length (snd n2)) == length (snd n1) then snd n1 else snd n2
@@ -85,9 +86,15 @@ negativeSum n1 n2
 
 normalSub :: BigNumber -> BigNumber -> BigNumber
 normalSub n1 n2
- -- | gt (reverse (snd n1)) (reverse (snd n2)) = (True, dropLeadingZeroes (normalSubAux (snd n1) (snd n2 ++ stuffZeroes (snd n2) (snd n1)) [] 0))
+  | gt (reverse (snd n1)) (reverse (snd n2)) = (True, dropLeadingZeroes (normalSubAux num2 num1 [] 0))
   | eq (reverse (snd n1)) (reverse (snd n2)) = (True, [0])
-  -- | otherwise = (False, dropLeadingZeroes (normalSubAux (snd n2) (snd n1 ++ stuffZeroes (snd n1) (snd n2)) [] 0))
+  | otherwise = (False, dropLeadingZeroes (normalSubAux num2 num1 [] 0))
+  where
+    smallest = if largest == snd n1 then snd n2 else snd n1
+    largest = if gt (snd n1) (snd n2) then snd n1 else snd n2
+    len = length largest - length smallest
+    num1 = smallest ++ stuffZeroes (fromIntegral len)
+    num2 = largest
 
 normalSubAux :: [Digit] -> [Digit] -> [Digit] -> Digit -> [Digit]
 normalSubAux (x : xs) (y : ys) res borrow
