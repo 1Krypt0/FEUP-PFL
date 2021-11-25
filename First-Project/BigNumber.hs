@@ -86,9 +86,9 @@ negativeSum n1 n2
 
 normalSub :: BigNumber -> BigNumber -> BigNumber
 normalSub n1 n2
-  | gt (reverse (snd n1)) (reverse (snd n2)) = (True, dropLeadingZeroes (normalSubAux num2 num1 [] 0))
+  | gt (reverse (snd n1)) (reverse (snd n2)) = (True, dropTrailingZeroes (reverse (normalSubAux num2 num1 [] 0)))
   | eq (reverse (snd n1)) (reverse (snd n2)) = (True, [0])
-  | otherwise = (False, dropLeadingZeroes (normalSubAux num2 num1 [] 0))
+  | otherwise = (False, dropTrailingZeroes (reverse (normalSubAux num2 num1 [] 0)))
   where
     smallest = if largest == snd n1 then snd n2 else snd n1
     largest = if gt (reverse (snd n1)) (reverse (snd n2)) then snd n1 else snd n2
@@ -110,23 +110,15 @@ first (x, y, z, u) = x
 second :: (a, b, c, d) -> b
 second (x, y, z, u) = y
 
-divBN :: BigNumber -> BigNumber -> (BigNumber, BigNumber)
-divBN n1 n2 = (first res, second res)
+divBN :: BigNumber -> BigNumber -> (BigNumber, Bool) --BigNumber)
+divBN n1 n2 = res
   where
-    res = divBNAux (num2, num1, num2, (True, [0]))
+    res = divBNAux (num1, num2)
     num1 = (fst n1, reverse (snd n1))
     num2 = (fst n2, reverse (snd n2))
 
-divBNAux :: (BigNumber, BigNumber, BigNumber, BigNumber) -> (BigNumber, BigNumber, BigNumber, BigNumber)
-divBNAux (a, b, c, d) = ((True, [0]), (True, [0]), (True, [0]), (True, [0])) --until (\(a, b, c, d) -> not (greaterThan c b) && not (equal c b)) add (a, b, c, d)
-
-{-
-  where
-    bigger = not (greaterThan c b) && not (equal c b)
-    add = somaBN first (True, [1])
-    addQuocient = somaBN d (True, [1])
-    subAcc = subBN c a
--}
+divBNAux :: (BigNumber, BigNumber) -> (BigNumber, Bool) --BigNumber)
+divBNAux (a, b) = (a, fst (subBNAux a b)) --last (until (\[(w, x), (y, z)] -> not (fst (subBNAux z x))) (\[(w, x), (y, z)] -> [(w, x), (somaAux y (True, [1]), subBNAux z x)]) [(a, b), ((True, [0]), a)])
 
 greaterThan :: BigNumber -> BigNumber -> Bool
 greaterThan (True, _) (False, _) = True
