@@ -1,4 +1,5 @@
 import BigNumber
+import Utils (eq, gt)
 
 fibRec :: (Integral a) => a -> a
 fibRec n
@@ -19,13 +20,13 @@ fibListaInfinita n = fibs !! fromIntegral n
 
 fibRecBN :: BigNumber -> BigNumber
 fibRecBN n
-  | equal n (True, [0]) || equal n (False, [0]) = (True, [0])
-  | equal n (True, [1]) = (True, [1])
-  | greaterThan n (True, [1]) = somaBN (fibRecBN (subBN n (True, [1]))) (fibRecBN (subBN n (True, [2])))
-  | otherwise = error "Invalid BigNumber"
+  | eq n (True, [0]) = (True, [0])
+  | eq n (True, [1]) = (True, [1])
+  | gt n (True, [1]) = somaBN (fibRecBN (subBN n (True, [1]))) (fibRecBN (subBN n (True, [2])))
+  | otherwise = error "Invalid BigNumber in fibRecBN"
 
-{-fibListaBN :: BigNumber -> BigNumber
+fibListaBN :: BigNumber -> BigNumber
 fibListaBN n = fibs !! read (output n)
   where
-    fibs = (True, [0]) : (True, [1]) : [somaBN (fibs !! fromIntegral (read (output i) - 1)) (fibs !! fromIntegral (read (output i) - 2)) | i <- [(True, [2]) .. n]]
--}
+    fibs = (True, [0]) : (True, [1]) : [somaBN (fibs !! fromIntegral (read (output i) - 1)) (fibs !! fromIntegral (read (output i) - 2)) | i <- lst]
+    lst = until (\x -> gt (last x) (subBN n (True, [1]))) (\x -> x ++ [somaBN (last x) (True, [1])]) [(True, [2])]
