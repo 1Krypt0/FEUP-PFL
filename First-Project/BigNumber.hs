@@ -1,7 +1,7 @@
 module BigNumber where
 
 import Data.Char (digitToInt)
-import Utils (eq, gt, stuffZeroes, xor)
+import Utils (eq, fourth, gt, stuffZeroes, third, xor)
 
 type BigNumber = (Bool, [Digit])
 
@@ -122,4 +122,9 @@ regularSubAux [] _ res _ = res
 regularSubAux _ [] res _ = res
 
 divBN :: BigNumber -> BigNumber -> (BigNumber, BigNumber)
-divBN n1 n2 = last (until (\[(w, x), (y, z)] -> not (fst (subBN z x))) (\[(w, x), (y, z)] -> [(w, x), (somaBN y (True, [1]), subBN z x)]) [(n1, n2), ((True, [0]), n1)])
+divBN n1 n2 = (third res, fourth res)
+  where
+    res = divBNAux n1 n2
+
+divBNAux :: BigNumber -> BigNumber -> (BigNumber, BigNumber, BigNumber, BigNumber)
+divBNAux n1 n2 = until (\(w, x, y, z) -> not (fst (subBN z x))) (\(w, x, y, z) -> (w, x, somaBN y (True, [1]), subBN z x)) (n1, n2, (True, [0]), n1)
