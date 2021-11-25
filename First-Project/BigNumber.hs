@@ -128,3 +128,7 @@ divBN n1 n2 = (third res, fourth res)
 
 divBNAux :: BigNumber -> BigNumber -> (BigNumber, BigNumber, BigNumber, BigNumber)
 divBNAux n1 n2 = until (\(w, x, y, z) -> not (fst (subBN z x))) (\(w, x, y, z) -> (w, x, somaBN y (True, [1]), subBN z x)) (n1, n2, (True, [0]), n1)
+
+safeDivBN :: BigNumber -> BigNumber -> Maybe (BigNumber, BigNumber)
+safeDivBN _ (_, [0]) = Nothing
+safeDivBN n1 n2 = Just (divBN n1 n2)
