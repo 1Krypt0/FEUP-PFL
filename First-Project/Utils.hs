@@ -3,27 +3,27 @@ module Utils where
 xor :: Bool -> Bool -> Bool
 xor a b = (a && not b) || (not a && b)
 
-gt :: [Integer] -> [Integer] -> Bool
-gt [] _ = False
-gt _ [] = True
-gt (x : xs) (y : ys)
+-- Helper function to determine the greatest of two BigNumbers as they are
+-- If used in auxiliary functions, be sure to reverse the list first
+gt :: (Bool, [Integer]) -> (Bool, [Integer]) -> Bool
+gt (False, _) (True, _) = False
+gt (True, _) (False, _) = True
+gt (True, []) (True, []) = False
+gt (False, []) (False, []) = False
+gt (True, x : xs) (True, y : ys)
   | length xs > length ys = True
   | length xs < length ys = False
   | x > y = True
-  | x == y = gt xs ys
-  | otherwise = False
+  | x < y = False
+  | otherwise = gt (True, xs) (True, ys)
+gt (False, x : xs) (False, y : ys) = not (gt (True, x : xs) (True, y : ys))
+gt _ _ = False
 
-eq :: [Integer] -> [Integer] -> Bool
-eq [] [] = True
-eq (x : xs) (y : ys)
-  | x == y = eq xs ys
-  | otherwise = False
-
-dropTrailingZeroes :: [Integer] -> [Integer]
-dropTrailingZeroes l = reverse (dropWhile (== 0) (reverse l))
-
-dropLeadingZeroes :: [Integer] -> [Integer]
-dropLeadingZeroes = dropWhile (== 0)
+eq :: (Bool, [Integer]) -> (Bool, [Integer]) -> Bool
+eq (_, [0]) (_, [0]) = True
+eq (True, _) (False, _) = False
+eq (False, _) (True, _) = False
+eq n1 n2 = snd n1 == snd n2
 
 stuffZeroes :: Integer -> [Integer]
 stuffZeroes len = replicate (fromIntegral len) 0
