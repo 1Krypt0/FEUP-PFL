@@ -9,12 +9,13 @@ type Digit = Integer
 
 -- Converts a given string into BigNumber format
 scanner :: String -> BigNumber
+scanner "0" = (True, [0])
 scanner str
   | head str == '-' = (False, negNum)
   | otherwise = (True, posNum)
   where
-    negNum = map (toInteger . digitToInt) (tail str)
-    posNum = map (toInteger . digitToInt) str
+    negNum = dropWhile (== 0) (map (toInteger . digitToInt) (tail str))
+    posNum = dropWhile (== 0) (map (toInteger . digitToInt) str)
 
 -- Converts a BigNumber back into a string
 output :: BigNumber -> String
@@ -77,7 +78,7 @@ negativeSum n1 n2
     num2 = (True, snd n2)
 
 subBN :: BigNumber -> BigNumber -> BigNumber
-subBN (False, [0]) (True, [0]) = (True, [0])
+subBN (_, [0]) (_, [0]) = (True, [0])
 subBN n1 n2 = subBNAux num1 num2
   where
     num1 = (fst n1, reverse (snd n1))
