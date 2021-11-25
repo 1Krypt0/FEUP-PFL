@@ -34,16 +34,16 @@ somaBN n1 n2 = somaBNAux num1 num2
 somaBNAux :: BigNumber -> BigNumber -> BigNumber
 somaBNAux n1 n2
   | not (xor (fst n1) (fst n2)) = regularSum n1 n2
-
---  | otherwise = negativeSum n1 n2
+  | otherwise = negativeSum n1 n2
 
 -- Defines the sign of the final result, later calling a helper function to compute the actual sum
 regularSum :: BigNumber -> BigNumber -> BigNumber
 regularSum (_, [0]) (_, [0]) = (True, [0])
 regularSum n1 n2
-  | fst n1 && fst n2 = (True, regularSumAux num1 num2 [] 0)
-  | otherwise = (False, regularSumAux num1 num2 [] 0)
+  | fst n1 && fst n2 = (True, res)
+  | otherwise = (False, res)
   where
+    res = regularSumAux num1 num2 [] 0
     num1 = snd largest ++ [0]
     num2 = snd smallest ++ stuffZeroes (fromIntegral (diff + 1))
     largest = if gt (fst n1, reverse (snd n1)) (fst n2, reverse (snd n2)) then n1 else n2
@@ -63,6 +63,61 @@ regularSumAux (x : xs) (y : ys) res carry
   | otherwise = regularSumAux xs ys (res ++ [result]) 0
   where
     result = x + y + carry
+regularSumAux [] _ res _ = res
+regularSumAux _ [] res _ = res
+
+negativeSum :: BigNumber -> BigNumber -> BigNumber
+negativeSum n1 n2
+  | fst n1 = subBNAux n1 num2
+  | otherwise = subBNAux n2 num1
+  where
+    num1 = (True, snd n1)
+    num2 = (True, snd n2)
+
+subBN :: BigNumber -> BigNumber -> BigNumber
+subBN (False, [0]) (True, [0]) = (True, [0])
+subBN n1 n2 = subBNAux num1 num2
+  where
+    num1 = (fst n1, reverse (snd n1))
+    num2 = (fst n2, reverse (snd n2))
+
+subBNAux :: BigNumber -> BigNumber -> BigNumber
+subBNAux n1 n2
+  | fst n1 && fst n2 = regularSub n1 n2
+  | fst n1 && not (fst n2) = somaBNAux n1 num2
+  | not (fst n1) && fst n2 = (False, snd (somaBNAux num1 num2))
+  | otherwise = regularSub num2 num1
+  where
+    num1 = (True, snd n1)
+    num2 = (True, snd n2)
+
+-- RegularSub is only called when both values are positive, and all it does is force the value so that the first
+-- is always greater than the second, as all that is needed to do is switch the sign in the end.
+regularSub :: BigNumber -> BigNumber -> BigNumber
+regularSub (_, [0]) (_, [0]) = (True, [0])
+regularSub n1 n2
+  | eq n1 n2 = (True, [0])
+  | largest == n1 = (True, res)
+  | otherwise = (False, res)
+  where
+    res = regularSubAux num1 num2 [] 0
+    num1 = snd largest
+    num2 = snd smallest ++ stuffZeroes (fromIntegral diff)
+    largest = if gt (fst n1, reverse (snd n1)) (fst n2, reverse (snd n2)) then n1 else n2
+    smallest = if largest == n1 then n2 else n1
+    diff = length (snd largest) - length (snd smallest)
+
+regularSubAux :: [Digit] -> [Digit] -> [Digit] -> Digit -> [Digit]
+regularSubAux [] [] res _
+  | last res == 0 = dropWhile (== 0) (reverse res)
+  | otherwise = reverse res
+regularSubAux (x : xs) (y : ys) res borrow
+  | result >= 0 = regularSubAux xs ys (res ++ [result]) 0
+  | otherwise = regularSubAux xs ys (res ++ [result + 10]) 1
+  where
+    result = (x - borrow) - y
+regularSubAux [] _ res _ = res
+regularSubAux _ [] res _ = res
 
 -- Helper function to determine the greatest of two BigNumbers as they are
 -- If used in auxiliary functions, be sure to reverse the list first
@@ -78,3 +133,10 @@ gt (True, x : xs) (True, y : ys)
   | x < y = False
   | otherwise = gt (True, xs) (True, ys)
 gt (False, x : xs) (False, y : ys) = not (gt (True, x : xs) (True, y : ys))
+gt _ _ = False
+
+eq :: BigNumber -> BigNumber -> Bool
+eq (_, [0]) (_, [0]) = True
+eq (True, _) (False, _) = False
+eq (False, _) (True, _) = False
+eq n1 n2 = snd n1 == snd n2
