@@ -158,6 +158,7 @@ breakIntoParts n1 (_, x : xs) res = breakIntoParts n1 (True, xs) (res ++ [(True,
     result = snd (addPart n1 x)
 
 addPart :: BigNumber -> Digit -> BigNumber
+addPart n1 0 = (True, [0])
 addPart n1 n = (True, reverse (snd res))
   where
     res = first (until (\(x, y, z) -> y == 1) (\(x, y, z) -> ((True, reverse (snd (somaBNAux x z))), y - 1, z)) (n1, n, n1))
