@@ -1,7 +1,7 @@
 module BigNumber where
 
 import Data.Char (digitToInt)
-import Utils (eq, fourth, gt, stuffZeroes, third, xor)
+import Utils (eq, fourth, gt, second, stuffZeroes, third, xor)
 
 type BigNumber = (Bool, [Digit])
 
@@ -132,3 +132,35 @@ divBNAux n1 n2 = until (\(w, x, y, z) -> not (fst (subBN z x))) (\(w, x, y, z) -
 safeDivBN :: BigNumber -> BigNumber -> Maybe (BigNumber, BigNumber)
 safeDivBN _ (_, [0]) = Nothing
 safeDivBN n1 n2 = Just (divBN n1 n2)
+
+mulBN :: BigNumber -> BigNumber -> BigNumber
+mulBN (_, [0]) _ = (True, [0])
+mulBN _ (_, [0]) = (True, [0])
+mulBN n1 n2 = mulBNAux num1 num2
+  where
+    num1 = (fst n1, reverse (snd n1))
+    num2 = (fst n2, reverse (snd n2))
+
+mulBNAux :: BigNumber -> BigNumber -> BigNumber
+mulBNAux n1 n2
+  | xor (fst n1) (fst n2) = (False, res)
+  | otherwise = (True, res)
+  where
+    res = snd (multiply n1 n2)
+
+multiply :: BigNumber -> BigNumber -> BigNumber
+multiply n1 n2 = foldl somaBN (True, [0]) (breakIntoParts n1 n2 [])
+
+breakIntoParts :: BigNumber -> BigNumber -> [BigNumber] -> [BigNumber]
+breakIntoParts n1 (_, []) res = res
+breakIntoParts n1 (_, x : xs) res = breakIntoParts n1 (True, xs) (res ++ [(True, result ++ stuffZeroes (fromIntegral (length res)))])
+  where
+    result = snd (addPart n1 x)
+
+addPart :: BigNumber -> Digit -> BigNumber
+addPart n1 n = (True, reverse (snd res))
+  where
+    res = first (until (\(x, y, z) -> y == 1) (\(x, y, z) -> ((True, reverse (snd (somaBNAux x z))), y - 1, z)) (n1, n, n1))
+
+first :: (a, b, c) -> a
+first (a, b, c) = a

@@ -33,3 +33,6 @@ third (a, b, c, d) = c
 
 fourth :: (a, b, c, d) -> d
 fourth (a, b, c, d) = d
+
+second :: (a, b, c) -> b
+second (a, b, c) = b
