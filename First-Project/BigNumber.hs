@@ -19,9 +19,10 @@ scanner str
 
 -- Converts a BigNumber back into a string
 output :: BigNumber -> String
+output (_,[0]) = "0"
 output num
-  | fst num = concatMap show (snd num)
-  | otherwise = '-' : concatMap show (snd num)
+  | fst num = concatMap show (dropWhile (== 0) (snd num))
+  | otherwise = '-' : concatMap show (dropWhile (== 0) (snd num))
 
 -- Function responsible for setting up the BigNumbers to the proper format for adittion.
 -- They will enter as represented but will be sent to the auxiliary function reversed,
