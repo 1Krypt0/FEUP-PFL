@@ -178,43 +178,89 @@ For each function developed, the following test cases where important to determi
 
 - fourth: Returns the fourth element of a quadruple.
 
-## Strategies
+# Strategies
 
-### scanner
+## scanner
 
-It was decided to separate negative and positive numbers, in order to parse properly the string when converting (through the fuction "map") each char into an integer. That way, our function has a case where the string starts with the char "-", in which the Big Number is negative, and another where it's positive and doesn't have the minus sign.
+It was decided to separate negative and positive numbers, in order to parse properly the string when converting (through the function "map") each character into an integer. Also, by converting each character individually, the number can be arbitrarily large, as it will never cause an overflow. Finally, cases for both positive and negative numbers where added, so that the "-" sign could be parsed as well.
 
-### output
-By checking if the first element of the tuple that constitutes our Big Number is true or false, we know its sign. After that, it is easier to convert it into a string, by placing '-' on the output before turning each element of the digits list into a string and concatinating them.
+## output
 
-### somaBN
-This function uses four other auxiliary functions, so that all the operations that a normal sum incorporates are covered and the steps for the resolution aren't illegible. The first important detail is reversing the list of digits, which is the job of the first function called. Afterwards, we needed to distinguish the operations through the signs, and later through the magnitudes of the numbers. That way, it is possible to calculate the sign of the result and which type of operation will be required. <br>
-In short, treat a sum between two positive numbers as a regular positive sum; between two negative numbers as a regular positive sum with a negative sign; and lastly, the ones with opposite signs as negative sums (subtractions). <br>
-Finally, for the addition itself, it was important to have in mind the ocasions in which adding two digits would have a result greater than 9 and the possibility of one of the numbers being smaller in length.
+By checking if the first element of the tuple that constitutes our Big Number is true or false, we know its sign. After that, it is easier to convert it into a string, by placing '-' on the output before turning each element of the digits list into a string and concatenating them.
 
-### subBN
+## somaBN
 
-### mulBN
+This function uses four other auxiliary functions, so that all the operations that a normal addition incorporates are covered and the steps for the resolution are clear and separated.
 
-### divBN
+The first important detail is reversing the list of digits, which is the job of the actual function called, somaBN.
+
+Afterwards, we needed to distinguish the operations through the signs and later through the magnitudes of the operands, in order to determine beforehand the sign of the result, as well as the type of operation required. In short, the functions treats a sum between two positive or two negative BigNumbers as a regular positive sum, changing the sign accordingly and lastly, the ones with opposite signs as simple subtractions, with the arguments in the correct order, as for example (-x) + (+y) = (+y) - (+x).
+
+The final preparation for the addition itself is to have in mind the occasions in which adding two digits would have a result greater than 9 and the possibility of one of the numbers being smaller in length, hence the padding added in the regularSum function.
+
+Finally, the result is calculated recursively, first summing the units (and the carry, which at the start is always 0) and checking if the result is greater than 10. If not, then we add them to the final result. If it is, then a carry of 1 is added to the next sum, and the result stored is the (sum - 10). Then, we do the same for the next digits, recursively, until none are left, point at which the function returns.
+
+## subBN
+
+This function uses four other auxiliary functions as well, and has a very similar structure to somaBN, since both operations are the inverse of each other.
+
+The first important detail is, like in the sum one, reversing the list of digits, which is the job of the actual function called, subBN.
+
+After that, we once again determine the operations through the signs and the magnitudes of the operands, in order to determine beforehand the sign of the result, as well as the type of operation required, according to arithmetic rules and much like in somaBN.
+
+After that, and in the case of a regular subtraction, the smaller number is also padded, but this time the larger is not, since the result will never be bigger than the larger number.
+
+Finally, the result is calculated recursively, first subtracting the units from each other (and subtracting the carry from the first unit) and checking if the result is negative. If not, then we add the subtraction to the final result. If it is, then we "borrow" 1 from the tens places, which means that it will have one subtracted from it, and the result stored in the final answer is (sub + 10). Then, we do the same for the next digits, recursively, until none are left, point at which the function returns.
+
+## mulBN
+
+To multiply two BigNumbers, a simple heuristic was used.
+
+The normal way to see a multiplication of x * y is that all that is done is add x onto itself y times. But, representing y as its digits (y1y2y3). multiplication is also doing x * y3 + x * y2 * 10 + x * y1 * 100, or, more generally, for the case of y = y_n y_n-1 y_n-2 ... y1 y0, x * y = sum(x * y_i * 10^i), i <- [0..n].
+
+As such, it is possible to represent multiplication as the sum of partial, easier multiplications that can be done in the "traditional" way of adding to itself, with a lot less overhead. In fact, it does in the worst case 10 * log_10(n) + 1 sums, much better than the n sums required with the traditional method.
+
+To do this, first the lists are reversed so that the units come first, like in the previous functions. Then, the sign is predetermined based on the sign of the operands, which, in the case of multiplication, is just checking if they are the same or not.
+
+Then, to multiply, one of the numbers (here, it is the first one), is "fixed". This means that it will not change throughout the operation, and is the one that will be added to itself. The other number, is then, in the aptly named breakIntoParts function, broken into each digit, and another function (addPart) is called which takes the first digit n (in the beginning, the units one) and sums the fixed number n times to itself using the somaBN function (as a way to force the correct orientation of the lists of digits).
+
+After that, the partial result is added to the list. But, before it can be added, it needs to have an offset, as we only did the x * y_i part. To do this, we check the size of the results list, which gives us all we need. If the list is empty, we are doing the partial sum of the units place and the offset of zeroes is 0. If it is the tens, the list will have size 1 and we will have an offset of 1 0, and so on. With this, there is no need to store the position of the digit relative to the original number y, as we can figure it out from the amount of results already calculated.
+
+Finally, when the non fixed BigNumber is depleted, all that is necessary to do is sum all of the partial results, which is taken care of in the multiply function, using the somaBN one as a helper. This final result is then the multiplication of both numbers, with the list in the proper format.
+
+
+## divBN
+
+The function used to divide two numbers uses a very simple strategy to achieve its purpose.
+
+All it does is start with the values unaltered (as we need them in the original order to use the somaBN and subBN functions), as well as 0 (representing the initial quotient) and a copy of the dividend, representing the initial remainder, all stored in a quadruple.
+
+Then, the function successively subtracts the divisor to the remainder , until the result turns negative. At each iteration of this subtraction, the value of the quotient is incremented by 1, which means an increase in the quotient. When the result effectively turns negative. The function halts, the value held by the quotient is the actual quotient, and the final result before the last subtraction is the remainder of the division.
 
 ---
 
-## Question 4:
+# Question 4:
+
 - **Function fibRec :: Int -> Int** accepts up to value 40 with output 102334155, 207.78 seconds elapsed and usage of 97,131,015,400 bytes. Due to a huge time overhead, no larger values where tested.
+
 - **Function fibLista :: Int -> Int** accepts up to value 92 with output 7540113804746346429, 0.01 seconds elapsed, usage of 132,968 bytes and no overflow. All inputs greater than 92 cause overflow.
+
 - **Function fibListaInfinita :: Int -> Int** accepts up to value 92 with output 7540113804746346429, 0.00 seconds elapsed, usage of 83,416 bytes and no overflow. All inputs greater than 92 cause overflow.
 
 - **Function fibRec :: Integer -> Integer** accepts up to value 40 with output 102334155, 367.86 seconds elapsed and usage of 96,119,078,984 bytes.
+
 - **Function fibLista :: Integer -> Integer** accepts up to value 100000 with output 2.6*10^20898, 257.73 seconds elapsed and usage of 523,370,656 bytes. No overflow with the values tested, but the greater they are, the longer it takes for the function to calculate the result.
+
 - **Function fibListaInfinita :: Integer -> Integer** accepts up to value 2000000 with the expected output, 127.60 seconds elapsed and usage of 176,154,768,536 bytes. 
 
 - **Function fibRecBN :: Big Number -> Big Number** accepts up to value 35 with output (True,[9,2,2,7,4,6,5]), 877.50 seconds elapsed and usage of 189,399,738,336 bytes.
+
 - **Function fibListaBN :: Big Number -> Big Number** accepts up to value 10000 with output 
 
 (True,[3,3,6,4,4,7,6,4,8,7,6,4,3,1,7,8,3,2,6,6,6,2,1,6,1,2,0,0,5,1,0,7,5,4,3,3,1,0,3,0,2,1,4,8,4,6,0,6,8,0,0,6,3,9,0,6,5,6,4,7,6,9,9,7,4,6,8,0,0,8,1,4,4,2,1,6,6,6,6,2,3,6,8,1,5,5,5,9,5,5,1,3,6,3,3,7,3,4,0,2,5,5,8,2,0,6,5,3,3,2,6,8,0,8,3,6,1,5,9,3,7,3,7,3,4,7,9,0,4,8,3,8,6,5,2,6,8,2,6,3,0,4,0,8,9,2,4,6,3,0,5,6,4,3,1,8,8,7,3,5,4,5,4,4,3,6,9,5,5,9,8,2,7,4,9,1,6,0,6,6,0,2,0,9,9,8,8,4,1,8,3,9,3,3,8,6,4,6,5,2,7,3,1,3,0,0,0,8,8,8,3,0,2,6,9,2,3,5,6,7,3,6,1,3,1,3,5,1,1,7,5,7,9,2,9,7,4,3,7,8,5,4,4,1,3,7,5,2,1,3,0,5,2,0,5,0,4,3,4,7,7,0,1,6,0,2,2,6,4,7,5,8,3,1,8,9,0,6,5,2,7,8,9,0,8,5,5,1,5,4,3,6,6,1,5,9,5,8,2,9,8,7,2,7,9,6,8,2,9,8,7,5,1,0,6,3,1,2,0,0,5,7,5,4,2,8,7,8,3,4,5,3,2,1,5,5,1,5,1,0,3,8,7,0,8,1,8,2,9,8,9,6,9,7,9,1,6,1,3,1,2,7,8,5,6,2,6,5,0,3,3,1,9,5,4,8,7,1,4,0,2,1,4,2,8,7,5,3,2,6,9,8,1,8,7,9,6,2,0,4,6,9,3,6,0,9,7,8,7,9,9,0,0,3,5,0,9,6,2,3,0,2,2,9,1,0,2,6,3,6,8,1,3,1,4,9,3,1,9,5,2,7,5,6,3,0,2,2,7,8,3,7,6,2,8,4,4,1,5,4,0,3,6,0,5,8,4,4,0,2,5,7,2,1,1,4,3,3,4,9,6,1,1,8,0,0,2,3,0,9,1,2,0,8,2,8,7,0,4,6,0,8,8,9,2,3,9,6,2,3,2,8,8,3,5,4,6,1,5,0,5,7,7,6,5,8,3,2,7,1,2,5,2,5,4,6,0,9,3,5,9,1,1,2,8,2,0,3,9,2,5,2,8,5,3,9,3,4,3,4,6,2,0,9,0,4,2,4,5,2,4,8,9,2,9,4,0,3,9,0,1,7,0,6,2,3,3,8,8,8,9,9,1,0,8,5,8,4,1,0,6,5,1,8,3,1,7,3,3,6,0,4,3,7,4,7,0,7,3,7,9,0,8,5,5,2,6,3,1,7,6,4,3,2,5,7,3,3,9,9,3,7,1,2,8,7,1,9,3,7,5,8,7,7,4,6,8,9,7,4,7,9,9,2,6,3,0,5,8,3,7,0,6,5,7,4,2,8,3,0,1,6,1,6,3,7,4,0,8,9,6,9,1,7,8,4,2,6,3,7,8,6,2,4,2,1,2,8,3,5,2,5,8,1,1,2,8,2,0,5,1,6,3,7,0,2,9,8,0,8,9,3,3,2,0,9,9,9,0,5,7,0,7,9,2,0,0,6,4,3,6,7,4,2,6,2,0,2,3,8,9,7,8,3,1,1,1,4,7,0,0,5,4,0,7,4,9,9,8,4,5,9,2,5,0,3,6,0,6,3,3,5,6,0,9,3,3,8,8,3,8,3,1,9,2,3,3,8,6,7,8,3,0,5,6,1,3,6,4,3,5,3,5,1,8,9,2,1,3,3,2,7,9,7,3,2,9,0,8,1,3,3,7,3,2,6,4,2,6,5,2,6,3,3,9,8,9,7,6,3,9,2,2,7,2,3,4,0,7,8,8,2,9,2,8,1,7,7,9,5,3,5,8,0,5,7,0,9,9,3,6,9,1,0,4,9,1,7,5,4,7,0,8,0,8,9,3,1,8,4,1,0,5,6,1,4,6,3,2,2,3,3,8,2,1,7,4,6,5,6,3,7,3,2,1,2,4,8,2,2,6,3,8,3,0,9,2,1,0,3,2,9,7,7,0,1,6,4,8,0,5,4,7,2,6,2,4,3,8,4,2,3,7,4,8,6,2,4,1,1,4,5,3,0,9,3,8,1,2,2,0,6,5,6,4,9,1,4,0,3,2,7,5,1,0,8,6,6,4,3,3,9,4,5,1,7,5,1,2,1,6,1,5,2,6,5,4,5,3,6,1,3,3,3,1,1,1,3,1,4,0,4,2,4,3,6,8,5,4,8,0,5,1,0,6,7,6,5,8,4,3,4,9,3,5,2,3,8,3,6,9,5,9,6,5,3,4,2,8,0,7,1,7,6,8,7,7,5,3,2,8,3,4,8,2,3,4,3,4,5,5,5,7,3,6,6,7,1,9,7,3,1,3,9,2,7,4,6,2,7,3,6,2,9,1,0,8,2,1,0,6,7,9,2,8,0,7,8,4,7,1,8,0,3,5,3,2,9,1,3,1,1,7,6,7,7,8,9,2,4,6,5,9,0,8,9,9,3,8,6,3,5,4,5,9,3,2,7,8,9,4,5,2,3,7,7,7,6,7,4,4,0,6,1,9,2,2,4,0,3,3,7,6,3,8,6,7,4,0,0,4,0,2,1,3,3,0,3,4,3,2,9,7,4,9,6,9,0,2,0,2,8,3,2,8,1,4,5,9,3,3,4,1,8,8,2,6,8,1,7,6,8,3,8,9,3,0,7,2,0,0,3,6,3,4,7,9,5,6,2,3,1,1,7,1,0,3,1,0,1,2,9,1,9,5,3,1,6,9,7,9,4,6,0,7,6,3,2,7,3,7,5,8,9,2,5,3,5,3,0,7,7,2,5,5,2,3,7,5,9,4,3,7,8,8,4,3,4,5,0,4,0,6,7,7,1,5,5,5,5,7,7,9,0,5,6,4,5,0,4,4,3,0,1,6,6,4,0,1,1,9,4,6,2,5,8,0,9,7,2,2,1,6,7,2,9,7,5,8,6,1,5,0,2,6,9,6,8,4,4,3,1,4,6,9,5,2,0,3,4,6,1,4,9,3,2,2,9,1,1,0,5,9,7,0,6,7,6,2,4,3,2,6,8,5,1,5,9,9,2,8,3,4,7,0,9,8,9,1,2,8,4,7,0,6,7,4,0,8,6,2,0,0,8,5,8,7,1,3,5,0,1,6,2,6,0,3,1,2,0,7,1,9,0,3,1,7,2,0,8,6,0,9,4,0,8,1,2,9,8,3,2,1,5,8,1,0,7,7,2,8,2,0,7,6,3,5,3,1,8,6,6,2,4,6,1,1,2,7,8,2,4,5,5,3,7,2,0,8,5,3,2,3,6,5,3,0,5,7,7,5,9,5,6,4,3,0,0,7,2,5,1,7,7,4,4,3,1,5,0,5,1,5,3,9,6,0,0,9,0,5,1,6,8,6,0,3,2,2,0,3,4,9,1,6,3,2,2,2,6,4,0,8,8,5,2,4,8,8,5,2,4,3,3,1,5,8,0,5,1,5,3,4,8,4,9,6,2,2,4,3,4,8,4,8,2,9,9,3,8,0,9,0,5,0,7,0,4,8,3,4,8,2,4,4,9,3,2,7,4,5,3,7,3,2,6,2,4,5,6,7,7,5,5,8,7,9,0,8,9,1,8,7,1,9,0,8,0,3,6,6,2,0,5,8,0,0,9,5,9,4,7,4,3,1,5,0,0,5,2,4,0,2,5,3,2,7,0,9,7,4,6,9,9,5,3,1,8,7,7,0,7,2,4,3,7,6,8,2,5,9,0,7,4,1,9,9,3,9,6,3,2,2,6,5,9,8,4,1,4,7,4,9,8,1,9,3,6,0,9,2,8,5,2,2,3,9,4,5,0,3,9,7,0,7,1,6,5,4,4,3,1,5,6,4,2,1,3,2,8,1,5,7,6,8,8,9,0,8,0,5,8,7,8,3,1,8,3,4,0,4,9,1,7,4,3,4,5,5,6,2,7,0,5,2,0,2,2,3,5,6,4,8,4,6,4,9,5,1,9,6,1,1,2,4,6,0,2,6,8,3,1,3,9,7,0,9,7,5,0,6,9,3,8,2,6,4,8,7,0,6,6,1,3,2,6,4,5,0,7,6,6,5,0,7,4,6,1,1,5,1,2,6,7,7,5,2,2,7,4,8,6,2,1,5,9,8,6,4,2,5,3,0,7,1,1,2,9,8,4,4,1,1,8,2,6,2,2,6,6,1,0,5,7,1,6,3,5,1,5,0,6,9,2,6,0,0,2,9,8,6,1,7,0,4,9,4,5,4,2,5,0,4,7,4,9,1,3,7,8,1,1,5,1,5,4,1,3,9,9,4,1,5,5,0,6,7,1,2,5,6,2,7,1,1,9,7,1,3,3,2,5,2,7,6,3,6,3,1,9,3,9,6,0,6,9,0,2,8,9,5,6,5,0,2,8,8,2,6,8,6,0,8,3,6,2,2,4,1,0,8,2,0,5,0,5,6,2,4,3,0,7,0,1,7,9,4,9,7,6,1,7,1,1,2,1,2,3,3,0,6,6,0,7,3,3,1,0,0,5,9,9,4,7,3,6,6,8,7,5]) 
 
 258.22 seconds elapsed and usage of 624,753,842,200 bytes.
+
 - **Function fibListaInfinitaBN :: Big Number -> Big Number** accepts up to value 10000 with output
 
 (True,[3,3,6,4,4,7,6,4,8,7,6,4,3,1,7,8,3,2,6,6,6,2,1,6,1,2,0,0,5,1,0,7,5,4,3,3,1,0,3,0,2,1,4,8,4,6,0,6,8,0,0,6,3,9,0,6,5,6,4,7,6,9,9,7,4,6,8,0,0,8,1,4,4,2,1,6,6,6,6,2,3,6,8,1,5,5,5,9,5,5,1,3,6,3,3,7,3,4,0,2,5,5,8,2,0,6,5,3,3,2,6,8,0,8,3,6,1,5,9,3,7,3,7,3,4,7,9,0,4,8,3,8,6,5,2,6,8,2,6,3,0,4,0,8,9,2,4,6,3,0,5,6,4,3,1,8,8,7,3,5,4,5,4,4,3,6,9,5,5,9,8,2,7,4,9,1,6,0,6,6,0,2,0,9,9,8,8,4,1,8,3,9,3,3,8,6,4,6,5,2,7,3,1,3,0,0,0,8,8,8,3,0,2,6,9,2,3,5,6,7,3,6,1,3,1,3,5,1,1,7,5,7,9,2,9,7,4,3,7,8,5,4,4,1,3,7,5,2,1,3,0,5,2,0,5,0,4,3,4,7,7,0,1,6,0,2,2,6,4,7,5,8,3,1,8,9,0,6,5,2,7,8,9,0,8,5,5,1,5,4,3,6,6,1,5,9,5,8,2,9,8,7,2,7,9,6,8,2,9,8,7,5,1,0,6,3,1,2,0,0,5,7,5,4,2,8,7,8,3,4,5,3,2,1,5,5,1,5,1,0,3,8,7,0,8,1,8,2,9,8,9,6,9,7,9,1,6,1,3,1,2,7,8,5,6,2,6,5,0,3,3,1,9,5,4,8,7,1,4,0,2,1,4,2,8,7,5,3,2,6,9,8,1,8,7,9,6,2,0,4,6,9,3,6,0,9,7,8,7,9,9,0,0,3,5,0,9,6,2,3,0,2,2,9,1,0,2,6,3,6,8,1,3,1,4,9,3,1,9,5,2,7,5,6,3,0,2,2,7,8,3,7,6,2,8,4,4,1,5,4,0,3,6,0,5,8,4,4,0,2,5,7,2,1,1,4,3,3,4,9,6,1,1,8,0,0,2,3,0,9,1,2,0,8,2,8,7,0,4,6,0,8,8,9,2,3,9,6,2,3,2,8,8,3,5,4,6,1,5,0,5,7,7,6,5,8,3,2,7,1,2,5,2,5,4,6,0,9,3,5,9,1,1,2,8,2,0,3,9,2,5,2,8,5,3,9,3,4,3,4,6,2,0,9,0,4,2,4,5,2,4,8,9,2,9,4,0,3,9,0,1,7,0,6,2,3,3,8,8,8,9,9,1,0,8,5,8,4,1,0,6,5,1,8,3,1,7,3,3,6,0,4,3,7,4,7,0,7,3,7,9,0,8,5,5,2,6,3,1,7,6,4,3,2,5,7,3,3,9,9,3,7,1,2,8,7,1,9,3,7,5,8,7,7,4,6,8,9,7,4,7,9,9,2,6,3,0,5,8,3,7,0,6,5,7,4,2,8,3,0,1,6,1,6,3,7,4,0,8,9,6,9,1,7,8,4,2,6,3,7,8,6,2,4,2,1,2,8,3,5,2,5,8,1,1,2,8,2,0,5,1,6,3,7,0,2,9,8,0,8,9,3,3,2,0,9,9,9,0,5,7,0,7,9,2,0,0,6,4,3,6,7,4,2,6,2,0,2,3,8,9,7,8,3,1,1,1,4,7,0,0,5,4,0,7,4,9,9,8,4,5,9,2,5,0,3,6,0,6,3,3,5,6,0,9,3,3,8,8,3,8,3,1,9,2,3,3,8,6,7,8,3,0,5,6,1,3,6,4,3,5,3,5,1,8,9,2,1,3,3,2,7,9,7,3,2,9,0,8,1,3,3,7,3,2,6,4,2,6,5,2,6,3,3,9,8,9,7,6,3,9,2,2,7,2,3,4,0,7,8,8,2,9,2,8,1,7,7,9,5,3,5,8,0,5,7,0,9,9,3,6,9,1,0,4,9,1,7,5,4,7,0,8,0,8,9,3,1,8,4,1,0,5,6,1,4,6,3,2,2,3,3,8,2,1,7,4,6,5,6,3,7,3,2,1,2,4,8,2,2,6,3,8,3,0,9,2,1,0,3,2,9,7,7,0,1,6,4,8,0,5,4,7,2,6,2,4,3,8,4,2,3,7,4,8,6,2,4,1,1,4,5,3,0,9,3,8,1,2,2,0,6,5,6,4,9,1,4,0,3,2,7,5,1,0,8,6,6,4,3,3,9,4,5,1,7,5,1,2,1,6,1,5,2,6,5,4,5,3,6,1,3,3,3,1,1,1,3,1,4,0,4,2,4,3,6,8,5,4,8,0,5,1,0,6,7,6,5,8,4,3,4,9,3,5,2,3,8,3,6,9,5,9,6,5,3,4,2,8,0,7,1,7,6,8,7,7,5,3,2,8,3,4,8,2,3,4,3,4,5,5,5,7,3,6,6,7,1,9,7,3,1,3,9,2,7,4,6,2,7,3,6,2,9,1,0,8,2,1,0,6,7,9,2,8,0,7,8,4,7,1,8,0,3,5,3,2,9,1,3,1,1,7,6,7,7,8,9,2,4,6,5,9,0,8,9,9,3,8,6,3,5,4,5,9,3,2,7,8,9,4,5,2,3,7,7,7,6,7,4,4,0,6,1,9,2,2,4,0,3,3,7,6,3,8,6,7,4,0,0,4,0,2,1,3,3,0,3,4,3,2,9,7,4,9,6,9,0,2,0,2,8,3,2,8,1,4,5,9,3,3,4,1,8,8,2,6,8,1,7,6,8,3,8,9,3,0,7,2,0,0,3,6,3,4,7,9,5,6,2,3,1,1,7,1,0,3,1,0,1,2,9,1,9,5,3,1,6,9,7,9,4,6,0,7,6,3,2,7,3,7,5,8,9,2,5,3,5,3,0,7,7,2,5,5,2,3,7,5,9,4,3,7,8,8,4,3,4,5,0,4,0,6,7,7,1,5,5,5,5,7,7,9,0,5,6,4,5,0,4,4,3,0,1,6,6,4,0,1,1,9,4,6,2,5,8,0,9,7,2,2,1,6,7,2,9,7,5,8,6,1,5,0,2,6,9,6,8,4,4,3,1,4,6,9,5,2,0,3,4,6,1,4,9,3,2,2,9,1,1,0,5,9,7,0,6,7,6,2,4,3,2,6,8,5,1,5,9,9,2,8,3,4,7,0,9,8,9,1,2,8,4,7,0,6,7,4,0,8,6,2,0,0,8,5,8,7,1,3,5,0,1,6,2,6,0,3,1,2,0,7,1,9,0,3,1,7,2,0,8,6,0,9,4,0,8,1,2,9,8,3,2,1,5,8,1,0,7,7,2,8,2,0,7,6,3,5,3,1,8,6,6,2,4,6,1,1,2,7,8,2,4,5,5,3,7,2,0,8,5,3,2,3,6,5,3,0,5,7,7,5,9,5,6,4,3,0,0,7,2,5,1,7,7,4,4,3,1,5,0,5,1,5,3,9,6,0,0,9,0,5,1,6,8,6,0,3,2,2,0,3,4,9,1,6,3,2,2,2,6,4,0,8,8,5,2,4,8,8,5,2,4,3,3,1,5,8,0,5,1,5,3,4,8,4,9,6,2,2,4,3,4,8,4,8,2,9,9,3,8,0,9,0,5,0,7,0,4,8,3,4,8,2,4,4,9,3,2,7,4,5,3,7,3,2,6,2,4,5,6,7,7,5,5,8,7,9,0,8,9,1,8,7,1,9,0,8,0,3,6,6,2,0,5,8,0,0,9,5,9,4,7,4,3,1,5,0,0,5,2,4,0,2,5,3,2,7,0,9,7,4,6,9,9,5,3,1,8,7,7,0,7,2,4,3,7,6,8,2,5,9,0,7,4,1,9,9,3,9,6,3,2,2,6,5,9,8,4,1,4,7,4,9,8,1,9,3,6,0,9,2,8,5,2,2,3,9,4,5,0,3,9,7,0,7,1,6,5,4,4,3,1,5,6,4,2,1,3,2,8,1,5,7,6,8,8,9,0,8,0,5,8,7,8,3,1,8,3,4,0,4,9,1,7,4,3,4,5,5,6,2,7,0,5,2,0,2,2,3,5,6,4,8,4,6,4,9,5,1,9,6,1,1,2,4,6,0,2,6,8,3,1,3,9,7,0,9,7,5,0,6,9,3,8,2,6,4,8,7,0,6,6,1,3,2,6,4,5,0,7,6,6,5,0,7,4,6,1,1,5,1,2,6,7,7,5,2,2,7,4,8,6,2,1,5,9,8,6,4,2,5,3,0,7,1,1,2,9,8,4,4,1,1,8,2,6,2,2,6,6,1,0,5,7,1,6,3,5,1,5,0,6,9,2,6,0,0,2,9,8,6,1,7,0,4,9,4,5,4,2,5,0,4,7,4,9,1,3,7,8,1,1,5,1,5,4,1,3,9,9,4,1,5,5,0,6,7,1,2,5,6,2,7,1,1,9,7,1,3,3,2,5,2,7,6,3,6,3,1,9,3,9,6,0,6,9,0,2,8,9,5,6,5,0,2,8,8,2,6,8,6,0,8,3,6,2,2,4,1,0,8,2,0,5,0,5,6,2,4,3,0,7,0,1,7,9,4,9,7,6,1,7,1,1,2,1,2,3,3,0,6,6,0,7,3,3,1,0,0,5,9,9,4,7,3,6,6,8,7,5]) 
