@@ -1,7 +1,7 @@
 module BigNumber where
 
 import Data.Char (digitToInt)
-import Utils (eq, fourth, gt, second, stuffZeroes, third, xor)
+import Utils (eq, first, fourth, gt, second, stuffZeroes, third, xor)
 
 type BigNumber = (Bool, [Digit])
 
@@ -89,7 +89,7 @@ subBN n1 n2 = subBNAux num1 num2
 subBNAux :: BigNumber -> BigNumber -> BigNumber
 subBNAux n1 n2
   | fst n1 && fst n2 = regularSub n1 n2
-  | fst n1 && not (fst n2) = somaBNAux n1 num2
+  | fst n1 && not (fst n2) = (True, snd (somaBNAux n1 num2))
   | not (fst n1) && fst n2 = (False, snd (somaBNAux num1 num2))
   | otherwise = regularSub num2 num1
   where
@@ -124,18 +124,6 @@ regularSubAux (x : xs) (y : ys) res borrow
 regularSubAux [] _ res _ = res
 regularSubAux _ [] res _ = res
 
-divBN :: BigNumber -> BigNumber -> (BigNumber, BigNumber)
-divBN n1 n2 = (third res, fourth res)
-  where
-    res = divBNAux n1 n2
-
-divBNAux :: BigNumber -> BigNumber -> (BigNumber, BigNumber, BigNumber, BigNumber)
-divBNAux n1 n2 = until (\(w, x, y, z) -> not (fst (subBN z x))) (\(w, x, y, z) -> (w, x, somaBN y (True, [1]), subBN z x)) (n1, n2, (True, [0]), n1)
-
-safeDivBN :: BigNumber -> BigNumber -> Maybe (BigNumber, BigNumber)
-safeDivBN _ (_, [0]) = Nothing
-safeDivBN n1 n2 = Just (divBN n1 n2)
-
 mulBN :: BigNumber -> BigNumber -> BigNumber
 mulBN (_, [0]) _ = (True, [0])
 mulBN _ (_, [0]) = (True, [0])
@@ -166,5 +154,14 @@ addPart n1 n = (True, reverse (snd res))
   where
     res = first (until (\(x, y, z) -> y == 1) (\(x, y, z) -> ((True, reverse (snd (somaBNAux x z))), y - 1, z)) (n1, n, n1))
 
-first :: (a, b, c) -> a
-first (a, b, c) = a
+divBN :: BigNumber -> BigNumber -> (BigNumber, BigNumber)
+divBN n1 n2 = (third res, fourth res)
+  where
+    res = divBNAux n1 n2
+
+divBNAux :: BigNumber -> BigNumber -> (BigNumber, BigNumber, BigNumber, BigNumber)
+divBNAux n1 n2 = until (\(w, x, y, z) -> not (fst (subBN z x))) (\(w, x, y, z) -> (w, x, somaBN y (True, [1]), subBN z x)) (n1, n2, (True, [0]), n1)
+
+safeDivBN :: BigNumber -> BigNumber -> Maybe (BigNumber, BigNumber)
+safeDivBN _ (_, [0]) = Nothing
+safeDivBN n1 n2 = Just (divBN n1 n2)
