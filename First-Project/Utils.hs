@@ -28,11 +28,14 @@ eq n1 n2 = snd n1 == snd n2
 stuffZeroes :: Integer -> [Integer]
 stuffZeroes len = replicate (fromIntegral len) 0
 
+first :: (a, b, c) -> a
+first (a, b, c) = a
+
+second :: (a, b, c) -> b
+second (a, b, c) = b
+
 third :: (a, b, c, d) -> c
 third (a, b, c, d) = c
 
 fourth :: (a, b, c, d) -> d
 fourth (a, b, c, d) = d
-
-second :: (a, b, c) -> b
-second (a, b, c) = b
