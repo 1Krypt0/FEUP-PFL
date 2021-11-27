@@ -20,7 +20,7 @@ scanner str
 
 -- Converts a BigNumber back into a string
 output :: BigNumber -> String
-output (_,[0]) = "0"
+output (_, [0]) = "0"
 output num
   | fst num = concatMap show (dropWhile (== 0) (snd num))
   | otherwise = '-' : concatMap show (dropWhile (== 0) (snd num))
@@ -149,7 +149,7 @@ mulBNAux n1 n2
   | xor (fst n1) (fst n2) = (False, res)
   | otherwise = (True, res)
   where
-    res = snd (multiply n1 n2)
+    res = snd (multiply (True, snd n1) (True, snd n2))
 
 multiply :: BigNumber -> BigNumber -> BigNumber
 multiply n1 n2 = foldl somaBN (True, [0]) (breakIntoParts n1 n2 [])
