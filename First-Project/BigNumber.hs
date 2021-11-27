@@ -10,6 +10,7 @@ type Digit = Integer
 -- Converts a given string into BigNumber format
 scanner :: String -> BigNumber
 scanner "0" = (True, [0])
+scanner "-0" = (True, [0])
 scanner str
   | head str == '-' = (False, negNum)
   | otherwise = (True, posNum)
