@@ -1,0 +1,124 @@
+# Trabalho Prático 1 - Programação Funcional e em Lógica
+
+## Test Cases
+For each function we developed, the following test cases where important to determine the function's efficiency and accuracy.
+
+### fibRec
+
+| Test         | Expected Output        | Output            | Importance                                                            |
+|--------------|------------------------|-------------------|-----------------------------------------------------------------------|
+| 0            | 0                      | 0                 | One of the basic results of the fibonacci sequence.                   | 
+| 1            | 1                      | 1                 | One of the basic results of the fibonacci sequence.                   | 
+| 10           | 55                     | 55                | A higher but important result to check the accuracy.                  | 
+| 40           | 102334155              | 102334155         | A high number that the function takes about 5-6 minutes to find the result.                   | 
+
+<br>
+
+### fibLista
+
+| Test         | Expected Output        | Output            | Importance                                                            |
+|--------------|------------------------|-------------------|-----------------------------------------------------------------------|
+| 0            | 0                      | 0                 | One of the basic results of the fibonacci sequence.                   | 
+| 1            | 1                      | 1                 | One of the basic results of the fibonacci sequence.                   | 
+| 10           | 55                     | 55                | A higher but important result to check the accuracy.                  | 
+| 100000          | 2.6*10^20898  | 2.6*10^20898  | A high number that helps checking the efficiency of the method and how high it could calculate.                   | 
+
+<br>
+
+### fibListaInfinita
+
+| Test         | Expected Output        | Output            | Importance                                                            |
+|--------------|------------------------|-------------------|-----------------------------------------------------------------------|
+| 0            | 0                      | 0                 | One of the basic results of the fibonacci sequence.                   | 
+| 1            | 1                      | 1                 | One of the basic results of the fibonacci sequence.                   | 
+| 10           | 55                     | 55                | A higher but important result to check the accuracy.                  | 
+| 10000          | 2.6*10^20898  | 2.6*10^20898  | A high number that helps checking the efficiency of the method and how high it could calculate.                   |
+
+<br>
+
+### scanner
+
+| Test         | Expected Output        | Output            | Importance                                                            |
+|--------------|------------------------|-------------------|-----------------------------------------------------------------------|
+| "0"          | (True,[0])            | (True,[0])             | Base case that causes bugs sometimes.                  | 
+| "-1"            | (False,[1])            | (False,[1])                 | Important to test if the sign is being read correctly.                   | 
+| "200000"           | (True,[2,0,0,0,0,0])        | (True,[2,0,0,0,0,0])                | Higher number to check if the list of digits is correct.                  | 
+| "0050"          | (True,[5,0])     | (True,[5,0])     | Zeroes on the beginning of the number are ignored.                   |
+
+<br>
+
+### output
+
+| Test         | Expected Output        | Output            | Importance                                                            |
+|--------------|------------------------|-------------------|-----------------------------------------------------------------------|
+| (True,[0])          |   "0"          | "0"             | Base case that causes bugs sometimes.                  | 
+| (False,[0])            | "0"           | "0"               | Although the sign doesn't matter for this case, it is more correct to be just zero.                   | 
+| (True,[0,0,5])           | "5"        | "5"                | Zeroes on the beginning of the number are ignored.                  | 
+| (False,[8,0])          | "-80"     | "-80"     | Important to test if the bool is being interpreted as the negative sign.                   |
+
+<br>
+
+### somaBN
+
+| Test         | Expected Output        | Output            | Importance                                                            |
+|--------------|------------------------|-------------------|-----------------------------------------------------------------------|
+| (True,[0]) (True,[0])          |   (True,[0])          | (True,[0])             | Base case that causes bugs sometimes.                  | 
+| (True,[5]) (False,[7,0])           | (False,[6,5])     | (False,[6,5])       | Check if the sign of the output is correct, contemplating the magnitudes of the numbers.                   | 
+| (False,[5]) (True,[7,0])     | (True,[6,5])       | (True,[6,5])              | Check if the sign of the output is correct, contemplating the magnitudes of the numbers.                  | 
+| (False,[8,0]) (False,[2,0])    | (False,[1,0,0]) | (False,[1,0,0]) | Test if the sum of two negative numbers returns an even smaller number.                   |
+| (True,[9,9,9]) (True,[9,9,9])    | (True,[1,9,9,8]) | (True,[1,9,9,8]) | Test if the sum of big digits like 9 and 9 would be a problem for the carry process.                   |
+
+<br>
+
+### subBN
+
+| Test         | Expected Output        | Output            | Importance                                                            |
+|--------------|------------------------|-------------------|-----------------------------------------------------------------------|
+| (True,[0]) (True,[0])          |   (True,[0])          | (True,[0])             | Base case that causes bugs sometimes.                  | 
+| (True,[5]) (False,[7,0])           | (True,[7,5])     | (True,[7,5])       | Check if the sign of the output is correct, contemplating the subtration of a negative number (-(-x) = +x).                   | 
+| (False,[5]) (True,[7,0])     | (False,[7,5])       | (False,[7,5])              | Check if the sign of the output is correct, contemplating the sign of the first number and the subtraction of a positive number.                  | 
+| (True,[1,8,4]) (True,[8,6])    | (True,[9,8]) | (True,[9,8]) | Tricky example because it shows that the borrow list should be created along with the operation. At first, the subtraction of 8 by 8 wouldn't need to borrow 1 from the decimal house on the left, but since 4<6 and the operation starts on the right, we end up having to borrow 1 from 8 in 184 and our subtraction of 8 by 8 becomes 7 by 8. In this example, it becomes clear that mid-operation there might be a new need of borrowing 1 from the left.                 |
+
+
+## Functions
+
+<br>
+
+## Strategies
+
+### scanner
+We decided to separate negative and positive numbers, in order to parse properly the string when converting (through the fuction "map") each char into an integer. That way, our function has a case where the string starts with the char "-", in which the Big Number is negative, and another where it's positive and doesn't have the minus sign.
+
+### output
+By checking if the first element of the tuple that constitutes our Big Number is true or false, we know its sign. After that, it is easier to convert it into a string, by placing '-' on the output before turning each element of the digits list into a string and concatinating them.
+
+### somaBN
+This function uses four other auxiliary functions, so that all the operations that a normal sum incorporates are covered and the steps for the resolution aren't illegible. The first important detail is reversing the list of digits, which is the job of the first function called. Afterwards, we needed to distinguish the operations through the signs, and later through the magnitudes of the numbers. That way, it is possible to calculate the sign of the result and which type of operation will be required. <br>
+In short, treat a sum between two positive numbers as a regular positive sum; between two negative numbers as a regular positive sum with a negative sign; and lastly, the ones with opposite signs as negative sums (subtractions). <br>
+Finally, for the addition itself, it was important to have in mind the ocasions in which adding two digits would have a result greater than 9 and the possibility of one of the numbers being smaller in length.
+
+### subBN
+
+
+### mulBN
+
+### divBN
+
+<br>
+
+## Question 4:
+- **Function fibRec :: Int -> Int** accepts up to value 40 with output 102334155, 207.78 seconds elapsed and usage of 97,131,015,400 bytes.
+- **Function fibLista :: Int -> Int** accepts up to value 92 with output 7540113804746346429, 0.01 seconds elapsed, usage of 132,968 bytes and no overflow. All inputs greater than 92 cause overflow.
+- **Function fibListaInfinita :: Int -> Int** accepts up to value 92 with output 7540113804746346429, 0.00 seconds elapsed, usage of 83,416 bytes and no overflow. All inputs greater than 92 cause overflow.
+
+- **Function fibRec :: Integer -> Integer** accepts up to value 40 with output 102334155, 367.86 seconds elapsed and usage of 96,119,078,984 bytes.
+- **Function fibLista :: Integer -> Integer** accepts up to value 100000 with output 2.6*10^20898, 257.73 seconds elapsed and usage of 523,370,656 bytes. No overflow with the values tested, but the greater they are, the longer it takes for the function to calculate the result.
+- **Function fibListaInfinita :: Integer -> Integer** accepts up to value 2000000 with the expected output, 127.60 seconds elapsed and usage of 176,154,768,536 bytes. 
+
+- **Function fibRecBN :: Big Number -> Big Number** accepts up to value 35 with output (True,[9,2,2,7,4,6,5]), 877.50 seconds elapsed and usage of 189,399,738,336 bytes.
+- **Function fibListaBN :: Big Number -> Big Number** accepts up to value 10000 with output <br>
+(True,[3,3,6,4,4,7,6,4,8,7,6,4,3,1,7,8,3,2,6,6,6,2,1,6,1,2,0,0,5,1,0,7,5,4,3,3,1,0,3,0,2,1,4,8,4,6,0,6,8,0,0,6,3,9,0,6,5,6,4,7,6,9,9,7,4,6,8,0,0,8,1,4,4,2,1,6,6,6,6,2,3,6,8,1,5,5,5,9,5,5,1,3,6,3,3,7,3,4,0,2,5,5,8,2,0,6,5,3,3,2,6,8,0,8,3,6,1,5,9,3,7,3,7,3,4,7,9,0,4,8,3,8,6,5,2,6,8,2,6,3,0,4,0,8,9,2,4,6,3,0,5,6,4,3,1,8,8,7,3,5,4,5,4,4,3,6,9,5,5,9,8,2,7,4,9,1,6,0,6,6,0,2,0,9,9,8,8,4,1,8,3,9,3,3,8,6,4,6,5,2,7,3,1,3,0,0,0,8,8,8,3,0,2,6,9,2,3,5,6,7,3,6,1,3,1,3,5,1,1,7,5,7,9,2,9,7,4,3,7,8,5,4,4,1,3,7,5,2,1,3,0,5,2,0,5,0,4,3,4,7,7,0,1,6,0,2,2,6,4,7,5,8,3,1,8,9,0,6,5,2,7,8,9,0,8,5,5,1,5,4,3,6,6,1,5,9,5,8,2,9,8,7,2,7,9,6,8,2,9,8,7,5,1,0,6,3,1,2,0,0,5,7,5,4,2,8,7,8,3,4,5,3,2,1,5,5,1,5,1,0,3,8,7,0,8,1,8,2,9,8,9,6,9,7,9,1,6,1,3,1,2,7,8,5,6,2,6,5,0,3,3,1,9,5,4,8,7,1,4,0,2,1,4,2,8,7,5,3,2,6,9,8,1,8,7,9,6,2,0,4,6,9,3,6,0,9,7,8,7,9,9,0,0,3,5,0,9,6,2,3,0,2,2,9,1,0,2,6,3,6,8,1,3,1,4,9,3,1,9,5,2,7,5,6,3,0,2,2,7,8,3,7,6,2,8,4,4,1,5,4,0,3,6,0,5,8,4,4,0,2,5,7,2,1,1,4,3,3,4,9,6,1,1,8,0,0,2,3,0,9,1,2,0,8,2,8,7,0,4,6,0,8,8,9,2,3,9,6,2,3,2,8,8,3,5,4,6,1,5,0,5,7,7,6,5,8,3,2,7,1,2,5,2,5,4,6,0,9,3,5,9,1,1,2,8,2,0,3,9,2,5,2,8,5,3,9,3,4,3,4,6,2,0,9,0,4,2,4,5,2,4,8,9,2,9,4,0,3,9,0,1,7,0,6,2,3,3,8,8,8,9,9,1,0,8,5,8,4,1,0,6,5,1,8,3,1,7,3,3,6,0,4,3,7,4,7,0,7,3,7,9,0,8,5,5,2,6,3,1,7,6,4,3,2,5,7,3,3,9,9,3,7,1,2,8,7,1,9,3,7,5,8,7,7,4,6,8,9,7,4,7,9,9,2,6,3,0,5,8,3,7,0,6,5,7,4,2,8,3,0,1,6,1,6,3,7,4,0,8,9,6,9,1,7,8,4,2,6,3,7,8,6,2,4,2,1,2,8,3,5,2,5,8,1,1,2,8,2,0,5,1,6,3,7,0,2,9,8,0,8,9,3,3,2,0,9,9,9,0,5,7,0,7,9,2,0,0,6,4,3,6,7,4,2,6,2,0,2,3,8,9,7,8,3,1,1,1,4,7,0,0,5,4,0,7,4,9,9,8,4,5,9,2,5,0,3,6,0,6,3,3,5,6,0,9,3,3,8,8,3,8,3,1,9,2,3,3,8,6,7,8,3,0,5,6,1,3,6,4,3,5,3,5,1,8,9,2,1,3,3,2,7,9,7,3,2,9,0,8,1,3,3,7,3,2,6,4,2,6,5,2,6,3,3,9,8,9,7,6,3,9,2,2,7,2,3,4,0,7,8,8,2,9,2,8,1,7,7,9,5,3,5,8,0,5,7,0,9,9,3,6,9,1,0,4,9,1,7,5,4,7,0,8,0,8,9,3,1,8,4,1,0,5,6,1,4,6,3,2,2,3,3,8,2,1,7,4,6,5,6,3,7,3,2,1,2,4,8,2,2,6,3,8,3,0,9,2,1,0,3,2,9,7,7,0,1,6,4,8,0,5,4,7,2,6,2,4,3,8,4,2,3,7,4,8,6,2,4,1,1,4,5,3,0,9,3,8,1,2,2,0,6,5,6,4,9,1,4,0,3,2,7,5,1,0,8,6,6,4,3,3,9,4,5,1,7,5,1,2,1,6,1,5,2,6,5,4,5,3,6,1,3,3,3,1,1,1,3,1,4,0,4,2,4,3,6,8,5,4,8,0,5,1,0,6,7,6,5,8,4,3,4,9,3,5,2,3,8,3,6,9,5,9,6,5,3,4,2,8,0,7,1,7,6,8,7,7,5,3,2,8,3,4,8,2,3,4,3,4,5,5,5,7,3,6,6,7,1,9,7,3,1,3,9,2,7,4,6,2,7,3,6,2,9,1,0,8,2,1,0,6,7,9,2,8,0,7,8,4,7,1,8,0,3,5,3,2,9,1,3,1,1,7,6,7,7,8,9,2,4,6,5,9,0,8,9,9,3,8,6,3,5,4,5,9,3,2,7,8,9,4,5,2,3,7,7,7,6,7,4,4,0,6,1,9,2,2,4,0,3,3,7,6,3,8,6,7,4,0,0,4,0,2,1,3,3,0,3,4,3,2,9,7,4,9,6,9,0,2,0,2,8,3,2,8,1,4,5,9,3,3,4,1,8,8,2,6,8,1,7,6,8,3,8,9,3,0,7,2,0,0,3,6,3,4,7,9,5,6,2,3,1,1,7,1,0,3,1,0,1,2,9,1,9,5,3,1,6,9,7,9,4,6,0,7,6,3,2,7,3,7,5,8,9,2,5,3,5,3,0,7,7,2,5,5,2,3,7,5,9,4,3,7,8,8,4,3,4,5,0,4,0,6,7,7,1,5,5,5,5,7,7,9,0,5,6,4,5,0,4,4,3,0,1,6,6,4,0,1,1,9,4,6,2,5,8,0,9,7,2,2,1,6,7,2,9,7,5,8,6,1,5,0,2,6,9,6,8,4,4,3,1,4,6,9,5,2,0,3,4,6,1,4,9,3,2,2,9,1,1,0,5,9,7,0,6,7,6,2,4,3,2,6,8,5,1,5,9,9,2,8,3,4,7,0,9,8,9,1,2,8,4,7,0,6,7,4,0,8,6,2,0,0,8,5,8,7,1,3,5,0,1,6,2,6,0,3,1,2,0,7,1,9,0,3,1,7,2,0,8,6,0,9,4,0,8,1,2,9,8,3,2,1,5,8,1,0,7,7,2,8,2,0,7,6,3,5,3,1,8,6,6,2,4,6,1,1,2,7,8,2,4,5,5,3,7,2,0,8,5,3,2,3,6,5,3,0,5,7,7,5,9,5,6,4,3,0,0,7,2,5,1,7,7,4,4,3,1,5,0,5,1,5,3,9,6,0,0,9,0,5,1,6,8,6,0,3,2,2,0,3,4,9,1,6,3,2,2,2,6,4,0,8,8,5,2,4,8,8,5,2,4,3,3,1,5,8,0,5,1,5,3,4,8,4,9,6,2,2,4,3,4,8,4,8,2,9,9,3,8,0,9,0,5,0,7,0,4,8,3,4,8,2,4,4,9,3,2,7,4,5,3,7,3,2,6,2,4,5,6,7,7,5,5,8,7,9,0,8,9,1,8,7,1,9,0,8,0,3,6,6,2,0,5,8,0,0,9,5,9,4,7,4,3,1,5,0,0,5,2,4,0,2,5,3,2,7,0,9,7,4,6,9,9,5,3,1,8,7,7,0,7,2,4,3,7,6,8,2,5,9,0,7,4,1,9,9,3,9,6,3,2,2,6,5,9,8,4,1,4,7,4,9,8,1,9,3,6,0,9,2,8,5,2,2,3,9,4,5,0,3,9,7,0,7,1,6,5,4,4,3,1,5,6,4,2,1,3,2,8,1,5,7,6,8,8,9,0,8,0,5,8,7,8,3,1,8,3,4,0,4,9,1,7,4,3,4,5,5,6,2,7,0,5,2,0,2,2,3,5,6,4,8,4,6,4,9,5,1,9,6,1,1,2,4,6,0,2,6,8,3,1,3,9,7,0,9,7,5,0,6,9,3,8,2,6,4,8,7,0,6,6,1,3,2,6,4,5,0,7,6,6,5,0,7,4,6,1,1,5,1,2,6,7,7,5,2,2,7,4,8,6,2,1,5,9,8,6,4,2,5,3,0,7,1,1,2,9,8,4,4,1,1,8,2,6,2,2,6,6,1,0,5,7,1,6,3,5,1,5,0,6,9,2,6,0,0,2,9,8,6,1,7,0,4,9,4,5,4,2,5,0,4,7,4,9,1,3,7,8,1,1,5,1,5,4,1,3,9,9,4,1,5,5,0,6,7,1,2,5,6,2,7,1,1,9,7,1,3,3,2,5,2,7,6,3,6,3,1,9,3,9,6,0,6,9,0,2,8,9,5,6,5,0,2,8,8,2,6,8,6,0,8,3,6,2,2,4,1,0,8,2,0,5,0,5,6,2,4,3,0,7,0,1,7,9,4,9,7,6,1,7,1,1,2,1,2,3,3,0,6,6,0,7,3,3,1,0,0,5,9,9,4,7,3,6,6,8,7,5]) <br>
+258.22 seconds elapsed and usage of 624,753,842,200 bytes.
+- **Function fibListaInfinitaBN :: Big Number -> Big Number** accepts up to value 10000 with output <br>
+(True,[3,3,6,4,4,7,6,4,8,7,6,4,3,1,7,8,3,2,6,6,6,2,1,6,1,2,0,0,5,1,0,7,5,4,3,3,1,0,3,0,2,1,4,8,4,6,0,6,8,0,0,6,3,9,0,6,5,6,4,7,6,9,9,7,4,6,8,0,0,8,1,4,4,2,1,6,6,6,6,2,3,6,8,1,5,5,5,9,5,5,1,3,6,3,3,7,3,4,0,2,5,5,8,2,0,6,5,3,3,2,6,8,0,8,3,6,1,5,9,3,7,3,7,3,4,7,9,0,4,8,3,8,6,5,2,6,8,2,6,3,0,4,0,8,9,2,4,6,3,0,5,6,4,3,1,8,8,7,3,5,4,5,4,4,3,6,9,5,5,9,8,2,7,4,9,1,6,0,6,6,0,2,0,9,9,8,8,4,1,8,3,9,3,3,8,6,4,6,5,2,7,3,1,3,0,0,0,8,8,8,3,0,2,6,9,2,3,5,6,7,3,6,1,3,1,3,5,1,1,7,5,7,9,2,9,7,4,3,7,8,5,4,4,1,3,7,5,2,1,3,0,5,2,0,5,0,4,3,4,7,7,0,1,6,0,2,2,6,4,7,5,8,3,1,8,9,0,6,5,2,7,8,9,0,8,5,5,1,5,4,3,6,6,1,5,9,5,8,2,9,8,7,2,7,9,6,8,2,9,8,7,5,1,0,6,3,1,2,0,0,5,7,5,4,2,8,7,8,3,4,5,3,2,1,5,5,1,5,1,0,3,8,7,0,8,1,8,2,9,8,9,6,9,7,9,1,6,1,3,1,2,7,8,5,6,2,6,5,0,3,3,1,9,5,4,8,7,1,4,0,2,1,4,2,8,7,5,3,2,6,9,8,1,8,7,9,6,2,0,4,6,9,3,6,0,9,7,8,7,9,9,0,0,3,5,0,9,6,2,3,0,2,2,9,1,0,2,6,3,6,8,1,3,1,4,9,3,1,9,5,2,7,5,6,3,0,2,2,7,8,3,7,6,2,8,4,4,1,5,4,0,3,6,0,5,8,4,4,0,2,5,7,2,1,1,4,3,3,4,9,6,1,1,8,0,0,2,3,0,9,1,2,0,8,2,8,7,0,4,6,0,8,8,9,2,3,9,6,2,3,2,8,8,3,5,4,6,1,5,0,5,7,7,6,5,8,3,2,7,1,2,5,2,5,4,6,0,9,3,5,9,1,1,2,8,2,0,3,9,2,5,2,8,5,3,9,3,4,3,4,6,2,0,9,0,4,2,4,5,2,4,8,9,2,9,4,0,3,9,0,1,7,0,6,2,3,3,8,8,8,9,9,1,0,8,5,8,4,1,0,6,5,1,8,3,1,7,3,3,6,0,4,3,7,4,7,0,7,3,7,9,0,8,5,5,2,6,3,1,7,6,4,3,2,5,7,3,3,9,9,3,7,1,2,8,7,1,9,3,7,5,8,7,7,4,6,8,9,7,4,7,9,9,2,6,3,0,5,8,3,7,0,6,5,7,4,2,8,3,0,1,6,1,6,3,7,4,0,8,9,6,9,1,7,8,4,2,6,3,7,8,6,2,4,2,1,2,8,3,5,2,5,8,1,1,2,8,2,0,5,1,6,3,7,0,2,9,8,0,8,9,3,3,2,0,9,9,9,0,5,7,0,7,9,2,0,0,6,4,3,6,7,4,2,6,2,0,2,3,8,9,7,8,3,1,1,1,4,7,0,0,5,4,0,7,4,9,9,8,4,5,9,2,5,0,3,6,0,6,3,3,5,6,0,9,3,3,8,8,3,8,3,1,9,2,3,3,8,6,7,8,3,0,5,6,1,3,6,4,3,5,3,5,1,8,9,2,1,3,3,2,7,9,7,3,2,9,0,8,1,3,3,7,3,2,6,4,2,6,5,2,6,3,3,9,8,9,7,6,3,9,2,2,7,2,3,4,0,7,8,8,2,9,2,8,1,7,7,9,5,3,5,8,0,5,7,0,9,9,3,6,9,1,0,4,9,1,7,5,4,7,0,8,0,8,9,3,1,8,4,1,0,5,6,1,4,6,3,2,2,3,3,8,2,1,7,4,6,5,6,3,7,3,2,1,2,4,8,2,2,6,3,8,3,0,9,2,1,0,3,2,9,7,7,0,1,6,4,8,0,5,4,7,2,6,2,4,3,8,4,2,3,7,4,8,6,2,4,1,1,4,5,3,0,9,3,8,1,2,2,0,6,5,6,4,9,1,4,0,3,2,7,5,1,0,8,6,6,4,3,3,9,4,5,1,7,5,1,2,1,6,1,5,2,6,5,4,5,3,6,1,3,3,3,1,1,1,3,1,4,0,4,2,4,3,6,8,5,4,8,0,5,1,0,6,7,6,5,8,4,3,4,9,3,5,2,3,8,3,6,9,5,9,6,5,3,4,2,8,0,7,1,7,6,8,7,7,5,3,2,8,3,4,8,2,3,4,3,4,5,5,5,7,3,6,6,7,1,9,7,3,1,3,9,2,7,4,6,2,7,3,6,2,9,1,0,8,2,1,0,6,7,9,2,8,0,7,8,4,7,1,8,0,3,5,3,2,9,1,3,1,1,7,6,7,7,8,9,2,4,6,5,9,0,8,9,9,3,8,6,3,5,4,5,9,3,2,7,8,9,4,5,2,3,7,7,7,6,7,4,4,0,6,1,9,2,2,4,0,3,3,7,6,3,8,6,7,4,0,0,4,0,2,1,3,3,0,3,4,3,2,9,7,4,9,6,9,0,2,0,2,8,3,2,8,1,4,5,9,3,3,4,1,8,8,2,6,8,1,7,6,8,3,8,9,3,0,7,2,0,0,3,6,3,4,7,9,5,6,2,3,1,1,7,1,0,3,1,0,1,2,9,1,9,5,3,1,6,9,7,9,4,6,0,7,6,3,2,7,3,7,5,8,9,2,5,3,5,3,0,7,7,2,5,5,2,3,7,5,9,4,3,7,8,8,4,3,4,5,0,4,0,6,7,7,1,5,5,5,5,7,7,9,0,5,6,4,5,0,4,4,3,0,1,6,6,4,0,1,1,9,4,6,2,5,8,0,9,7,2,2,1,6,7,2,9,7,5,8,6,1,5,0,2,6,9,6,8,4,4,3,1,4,6,9,5,2,0,3,4,6,1,4,9,3,2,2,9,1,1,0,5,9,7,0,6,7,6,2,4,3,2,6,8,5,1,5,9,9,2,8,3,4,7,0,9,8,9,1,2,8,4,7,0,6,7,4,0,8,6,2,0,0,8,5,8,7,1,3,5,0,1,6,2,6,0,3,1,2,0,7,1,9,0,3,1,7,2,0,8,6,0,9,4,0,8,1,2,9,8,3,2,1,5,8,1,0,7,7,2,8,2,0,7,6,3,5,3,1,8,6,6,2,4,6,1,1,2,7,8,2,4,5,5,3,7,2,0,8,5,3,2,3,6,5,3,0,5,7,7,5,9,5,6,4,3,0,0,7,2,5,1,7,7,4,4,3,1,5,0,5,1,5,3,9,6,0,0,9,0,5,1,6,8,6,0,3,2,2,0,3,4,9,1,6,3,2,2,2,6,4,0,8,8,5,2,4,8,8,5,2,4,3,3,1,5,8,0,5,1,5,3,4,8,4,9,6,2,2,4,3,4,8,4,8,2,9,9,3,8,0,9,0,5,0,7,0,4,8,3,4,8,2,4,4,9,3,2,7,4,5,3,7,3,2,6,2,4,5,6,7,7,5,5,8,7,9,0,8,9,1,8,7,1,9,0,8,0,3,6,6,2,0,5,8,0,0,9,5,9,4,7,4,3,1,5,0,0,5,2,4,0,2,5,3,2,7,0,9,7,4,6,9,9,5,3,1,8,7,7,0,7,2,4,3,7,6,8,2,5,9,0,7,4,1,9,9,3,9,6,3,2,2,6,5,9,8,4,1,4,7,4,9,8,1,9,3,6,0,9,2,8,5,2,2,3,9,4,5,0,3,9,7,0,7,1,6,5,4,4,3,1,5,6,4,2,1,3,2,8,1,5,7,6,8,8,9,0,8,0,5,8,7,8,3,1,8,3,4,0,4,9,1,7,4,3,4,5,5,6,2,7,0,5,2,0,2,2,3,5,6,4,8,4,6,4,9,5,1,9,6,1,1,2,4,6,0,2,6,8,3,1,3,9,7,0,9,7,5,0,6,9,3,8,2,6,4,8,7,0,6,6,1,3,2,6,4,5,0,7,6,6,5,0,7,4,6,1,1,5,1,2,6,7,7,5,2,2,7,4,8,6,2,1,5,9,8,6,4,2,5,3,0,7,1,1,2,9,8,4,4,1,1,8,2,6,2,2,6,6,1,0,5,7,1,6,3,5,1,5,0,6,9,2,6,0,0,2,9,8,6,1,7,0,4,9,4,5,4,2,5,0,4,7,4,9,1,3,7,8,1,1,5,1,5,4,1,3,9,9,4,1,5,5,0,6,7,1,2,5,6,2,7,1,1,9,7,1,3,3,2,5,2,7,6,3,6,3,1,9,3,9,6,0,6,9,0,2,8,9,5,6,5,0,2,8,8,2,6,8,6,0,8,3,6,2,2,4,1,0,8,2,0,5,0,5,6,2,4,3,0,7,0,1,7,9,4,9,7,6,1,7,1,1,2,1,2,3,3,0,6,6,0,7,3,3,1,0,0,5,9,9,4,7,3,6,6,8,7,5]) <br>
+268.44 seconds elapsed and usage of 621,970,070,488 bytes.
