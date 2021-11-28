@@ -270,3 +270,10 @@ Then, the function successively subtracts the divisor to the remainder , until t
 Conclusion: For fibRec and fibRecBN, it is always hard to calculate bigger numbers since it needs a lot of resources (in terms of byte usage) and time to get to the result. <br>
 For Int values on fibLista and fibListaInfinita, it is possible to observe overflow, so it can't calculate numbers bigger than 92. Although the algorithm is very efficient, when the cast of the parameters of the function is Int, the utility is limited.
 To calculate bigger numbers, it is surprising to see that fibLista and fibListaInfinita (Integer -> Integer) are more efficient than fibListaBN and fibListaInfinitaBN, since the functions envolved in operations between BigNumbers are more complex. That way it takes more resource and time for fibListaBN and fibListaInfinitaBN to get to a result that fibLista and fibListaInfinita can achieve without overflowing.
+
+## Project Authors
+
+This project was developed by:
+
+- Carolina Figueira up20196845 
+- Tiago Rodrigues up201907021
