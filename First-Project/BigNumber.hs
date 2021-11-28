@@ -88,7 +88,7 @@ subBN n1 n2 = subBNAux num1 num2
     num1 = (fst n1, reverse (snd n1))
     num2 = (fst n2, reverse (snd n2))
 
--- Interprets the signs of the BigNumbers and covers all the possibilities 
+-- Interprets the signs of the BigNumbers and covers all the possibilities
 -- of operations to determine the subtraction of those two numbers
 subBNAux :: BigNumber -> BigNumber -> BigNumber
 subBNAux n1 n2
@@ -116,7 +116,7 @@ regularSub n1 n2
     smallest = if largest == n1 then n2 else n1
     diff = length (snd largest) - length (snd smallest)
 
--- Calculates the actual subtraction, using a borrow list
+-- Calculates the actual subtraction, using a borrow digit
 regularSubAux :: [Digit] -> [Digit] -> [Digit] -> Digit -> [Digit]
 regularSubAux [] [] res _
   | last res == 0 = dropWhile (== 0) (reverse res)
@@ -150,7 +150,7 @@ mulBNAux n1 n2
 multiply :: BigNumber -> BigNumber -> BigNumber
 multiply n1 n2 = foldl somaBN (True, [0]) (breakIntoParts n1 n2 [])
 
--- Treats the multiplication of the BigNumbers as a series of 
+-- Treats the multiplication of the BigNumbers as a series of
 -- multiplications between the first number and the digits that form the second one,
 -- having in mind the place that digit occupied in the original number
 breakIntoParts :: BigNumber -> BigNumber -> [BigNumber] -> [BigNumber]
