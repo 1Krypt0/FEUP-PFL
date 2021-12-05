@@ -275,5 +275,5 @@ To calculate bigger numbers, it is surprising to see that fibLista and fibListaI
 
 This project was developed by:
 
-- Carolina Figueira up20196845 
+- Carolina Figueira up201906845 
 - Tiago Rodrigues up201907021
