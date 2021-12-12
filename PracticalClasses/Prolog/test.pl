@@ -46,7 +46,7 @@ parent(jay, claire).
 
 % Mitchell's parents
 parent(dede, mitchell).
-parent(jay, mithcell).
+parent(jay, mitchell).
 
 % Joe's parents
 parent(jay, joe).
@@ -98,15 +98,15 @@ parent(haley, poppy).
 
 % b) Using the interpreter, obtain the answers to the following questions
 %
-% i. Is haley a female? yes
-% ii. Is Gil a male? no
-% iii. Is Frank Phil's parent? yes
-% iv. Who are Claire's parents? dede, jay
-% v. Who are Gloria's children? joe, manny
-% vi.
-% vii.
-% viii. Does Alex have children? no
-% ix.
+% i. Is haley a female? female(haley) -> yes
+% ii. Is Gil a male? male(Gil) -> no
+% iii. Is Frank Phil's parent? parent(frank, phil) -> yes
+% iv. Who are Claire's parents? parent(X, claire) -> dede, jay
+% v. Who are Gloria's children? parent(gloria, x) -> joe, manny
+% vi. Who are Jay's grandchildren? parent(jay, P), parent(P, G) -> luke, alex, haley, rexford, lily
+% vii. Who are Lily's grandparents? parent(G, P), parent(P, lily) -> dede, jay, barb, merle
+% viii. Does Alex have children? parent(Alex, C) -> no
+% ix. Who is a son of Jay, but not of Gloria? parent(jay, X), \+parent(gloria, X) -> claire, mitchell
 
 % c) Write rules that define more complex familiar relations, like father,
 %    grandparent, grandmother, siblings, halfSiblings, cousins and uncle.
