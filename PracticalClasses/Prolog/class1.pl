@@ -178,3 +178,20 @@ frequenta(redes, eduardo).
 % b) Use the interpreter to answer the following questions:
 %
 % i. Which UC does Diogenes teach? leciona(UC, diogenes) -> estatistica
+% ii. Does Felismina teach any UC? leciona(UC, felismina) -> no
+% iii. What UC's does Claudio go to? frequenta(UC, claudio) -> estatistica, redes
+% iv. Does Dalmindo go to any UC? frequenta(UC, dalmindo) -> no
+% v. Is Eduarda a student of Bernardete? -> leciona(UC, bernardete), frequenta(UC, eduarda) -> no
+% vi. Do Alberto and Alvaro go to any UC in common? frequenta(UC, alberto), frequenta(UC, alvaro) -> no
+
+% c) Write rules in Prolog that allow you to answer the following questions
+
+% i. X is a student of professor Y?
+aluno(X, Y) :- frequenta(UC, X), leciona(UC, Y).
+
+% ii. Who are the students of professor X?
+% TODO: Ask why this doesn't work.
+alunos(Prof) :- leciona(UC, Prof), frequenta(UC, Y).
+
+% iii. Who are the professors of student X?
+professores(X) :- aluno(X, _).
