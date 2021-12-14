@@ -190,8 +190,22 @@ frequenta(redes, eduardo).
 aluno(X, Y) :- frequenta(UC, X), leciona(UC, Y).
 
 % ii. Who are the students of professor X?
-% TODO: Ask why this doesn't work.
-alunos(Prof) :- leciona(UC, Prof), frequenta(UC, Y).
+% We can actually reuse the same function from above, changing the variables
+% that we pass.
 
 % iii. Who are the professors of student X?
-professores(X) :- aluno(X, _).
+% Once again, the first rule can also be used.
+
+% iv. Who is simultaneosly a student of professor X and professor Y?
+studentOfTwo(X, Y, S) :- aluno(S, X), aluno(S, Y).
+
+% v. Who is a colleague of who?
+colega(X, Y) :- leciona(_, X), leciona(_, Y), X \= Y.
+colega(X, Y) :- frequenta(UC, X), frequenta(UC, Y), X \= Y.
+
+%
+% Question 4
+%
+traduz(1, 'Integer Overflow').
+traduz(2, 'Divisão por 0').
+traduz(3, 'ID Desconhecido').
