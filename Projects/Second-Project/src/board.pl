@@ -100,3 +100,25 @@ get_player_piece_positions(Board, Player, [Row, Column], Acc, Positions) :-
     NewRow is Row + 1,
     NewColumn is 0,
     get_player_piece_positions(Board, Player, [NewRow, NewColumn], Acc, Positions).
+
+get_empty_positions(Board, Positions) :-
+    get_empty_positions(Board, [0, 0], [], Positions).
+
+get_empty_positions(_, [5, _], Positions, Positions).
+
+get_empty_positions(Board, [Row, Column], Acc, Positions) :-
+    get_piece(Board, [Row, Column], Piece),
+    (
+        Piece =:= 0,
+        append(Acc, [[Row, Column]], NewAcc)
+        ;
+        NewAcc = Acc
+    ),
+    NewColumn is Column + 1,
+    get_empty_positions(Board, [Row, NewColumn], NewAcc, Positions).
+
+get_empty_positions(Board, [Row, Column], Acc, Positions) :-
+    Column < 6,
+    NewRow is Row + 1,
+    NewColumn is 0,
+    get_empty_positions(Board, [NewRow, NewColumn], Acc, Positions).
