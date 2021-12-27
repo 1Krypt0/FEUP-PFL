@@ -20,6 +20,16 @@ validate_move(Board, [Row, Column, Direction], Player) :-
     valid_position(Board, [DestinationRow, DestinationColumn], DestinationPiece),
     DestinationPiece =:= 0.
 
+move(Board, Player, [Row, Column, Direction], NewBoard) :-
+    validate_move(Board, [Row, Column, Direction], Player),
+    get_piece(Board, [Row, Column], Piece),
+    direction(Direction, RowIncrement, ColumnIncrement),
+    DestinationRow is Row + RowIncrement,
+    DestinationColumn is Column + ColumnIncrement,
+    set_piece(Board, [Row, Column], 0, ResultBoard),
+    set_piece(ResultBoard, [DestinationRow, DestinationColumn], Piece, NewBoard).
+
+
 /*
 *  game_over(+Board, -Result)
 *
