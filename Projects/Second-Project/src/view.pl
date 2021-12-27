@@ -1,4 +1,3 @@
-:- include('utils.pl').
 /**
  * Write a separation line
  */
