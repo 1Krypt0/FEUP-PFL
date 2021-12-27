@@ -1,3 +1,7 @@
+get_player(1, 1).
+get_player(2, 2).
+
+
 /**
 *
 *  get_piece(+Board, +[Row, Column], -Piece)
@@ -74,3 +78,25 @@ set_row([Value | Rest], NCol, NewValue, NCols, CurrentCol, Acc, NewRow) :-
     set_row(Rest, NCol, NewValue, NCols, NextCol, NewAcc, NewRow).
 
 
+get_player_piece_positions(Board, Player, Positions) :-
+    get_player_piece_positions(Board, Player, [0, 0], [], Positions).
+
+get_player_piece_positions(_, _, [5, _], Positions, Positions).
+
+get_player_piece_positions(Board, Player, [Row, Column], Acc, Positions) :-
+    get_piece(Board, [Row, Column], Piece),
+    (
+        get_player(Piece, Player),
+        append(Acc, [[Row, Column]], NewAcc)
+        ;
+        NewAcc = Acc
+    ),
+    NewColumn is Column + 1,
+    get_player_piece_positions(Board, Player, [Row, NewColumn], NewAcc, Positions).
+
+
+get_player_piece_positions(Board, Player, [Row, Column], Acc, Positions) :-
+    Column < 6,
+    NewRow is Row + 1,
+    NewColumn is 0,
+    get_player_piece_positions(Board, Player, [NewRow, NewColumn], Acc, Positions).
