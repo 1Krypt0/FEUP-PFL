@@ -18,7 +18,7 @@ One system requirement is having a font with all ASCII characters, but since tha
 To run the game on a graphical interface:
 
 1. Open SICStus Prolog
-2. Open `File` > `Consult` > `Select glaisher.pl located in directory /src of this project`
+2. Open `File` > `Consult` > `Select kono.pl located in directory /src of this project`
 
 And if running the game on a terminal:
 
@@ -27,7 +27,7 @@ And if running the game on a terminal:
 
 ```prolog
 
-consult('./src/glaisher.pl').
+consult('./src/kono.pl').
 
 ```
 
