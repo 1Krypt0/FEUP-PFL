@@ -1,3 +1,48 @@
+get_player(1, 1).
+get_player(2, 2).
+
+/**
+ * Direction Map
+ * North West - 0
+ * North East - 1
+ * South West - 2
+ * South East - 3
+ * direction(DirectionID, RowIncrement, ColumnIncrement)
+ */
+direction(0, -1, -1).
+direction(1, -1, 1).
+direction(2, 1, -1).
+direction(3, 1, 1).
+
+directions([[-1, -1], [-1, 1], [1, -1], [1, 1]]).
+
+/**
+ * Check if row is valid on the board
+ */
+valid_row(Board, NRow) :-
+    NRow >= 0,
+    length(Board, NRows),
+    NRow < NRows.
+
+
+/**
+ * Checks if column is valid on the board
+ */
+valid_column(Board, NRow, NColumn) :-
+    NColumn >= 0,
+    get_row(Board, NRow, Row),
+    length(Row, NCols),
+    NColumn < NCols.
+
+
+/**
+ * Checks if the position is valid on the board
+ */
+valid_position(Board, [NRow, NColumn], Piece) :-
+    valid_row(Board, NRow),
+    valid_column(Board, NRow, NColumn),
+    get_piece(Board, [NRow, NColumn], Piece).
+
 /**
 *
 *  get_piece(+Board, +[Row, Column], -Piece)
@@ -74,3 +119,67 @@ set_row([Value | Rest], NCol, NewValue, NCols, CurrentCol, Acc, NewRow) :-
     set_row(Rest, NCol, NewValue, NCols, NextCol, NewAcc, NewRow).
 
 
+get_player_piece_positions(Board, Player, Positions) :-
+    get_player_piece_positions(Board, Player, [0, 0], [], Positions).
+
+get_player_piece_positions(_, _, [5, _], Positions, Positions).
+
+get_player_piece_positions(Board, Player, [Row, Column], Acc, Positions) :-
+    get_piece(Board, [Row, Column], Piece),
+    (
+        get_player(Piece, Player),
+        append(Acc, [[Row, Column]], NewAcc)
+        ;
+        NewAcc = Acc
+    ),
+    NewColumn is Column + 1,
+    get_player_piece_positions(Board, Player, [Row, NewColumn], NewAcc, Positions).
+
+
+get_player_piece_positions(Board, Player, [Row, Column], Acc, Positions) :-
+    Column < 6,
+    NewRow is Row + 1,
+    NewColumn is 0,
+    get_player_piece_positions(Board, Player, [NewRow, NewColumn], Acc, Positions).
+
+get_empty_positions(Board, Positions) :-
+    get_empty_positions(Board, [0, 0], [], Positions).
+
+get_empty_positions(_, [5, _], Positions, Positions).
+
+get_empty_positions(Board, [Row, Column], Acc, Positions) :-
+    get_piece(Board, [Row, Column], Piece),
+    (
+        Piece =:= 0,
+        append(Acc, [[Row, Column]], NewAcc)
+        ;
+        NewAcc = Acc
+    ),
+    NewColumn is Column + 1,
+    get_empty_positions(Board, [Row, NewColumn], NewAcc, Positions).
+
+get_empty_positions(Board, [Row, Column], Acc, Positions) :-
+    Column < 6,
+    NewRow is Row + 1,
+    NewColumn is 0,
+    get_empty_positions(Board, [NewRow, NewColumn], Acc, Positions).
+
+/**
+ * Get player stacks adjacent to stack on board
+ */
+get_empty_adjacents(Board, Player, Position, Adjacents) :-
+    directions(Directions),
+    get_empty_adjacents(Board, Player, Position, Directions, [], Adjacents), !.
+
+get_empty_adjacents(_, _, _, [], Adjacents, Adjacents) :- !.
+get_empty_adjacents(Board, Player, [Row, Column], [[RowInc, ColInc] | Rest], Acc, Adjacents) :-
+    NewRow is Row + RowInc,
+    NewCol is Column + ColInc, !,
+    (
+        valid_position(Board, [NewRow, NewCol], Piece),
+        Piece =:= 0,
+        append(Acc, [[NewRow, NewCol]], NewAcc)
+        ;
+        NewAcc = Acc
+    ),
+    get_empty_adjacents(Board, Player, [Row, Column], Rest, NewAcc, Adjacents), !.
