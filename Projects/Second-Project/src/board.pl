@@ -167,12 +167,12 @@ get_empty_positions(Board, [Row, Column], Acc, Positions) :-
 /**
  * Get player stacks adjacent to stack on board
  */
-get_empty_adjacents(Board, Player, Position, Adjacents) :-
+get_empty_adjacents(Board, Position, Adjacents) :-
     directions(Directions),
-    get_empty_adjacents(Board, Player, Position, Directions, [], Adjacents), !.
+    get_empty_adjacents(Board, Position, Directions, [], Adjacents), !.
 
-get_empty_adjacents(_, _, _, [], Adjacents, Adjacents) :- !.
-get_empty_adjacents(Board, Player, [Row, Column], [[RowInc, ColInc] | Rest], Acc, Adjacents) :-
+get_empty_adjacents(_, _, [], Adjacents, Adjacents) :- !.
+get_empty_adjacents(Board, [Row, Column], [[RowInc, ColInc] | Rest], Acc, Adjacents) :-
     NewRow is Row + RowInc,
     NewCol is Column + ColInc, !,
     (
@@ -182,4 +182,4 @@ get_empty_adjacents(Board, Player, [Row, Column], [[RowInc, ColInc] | Rest], Acc
         ;
         NewAcc = Acc
     ),
-    get_empty_adjacents(Board, Player, [Row, Column], Rest, NewAcc, Adjacents), !.
+    get_empty_adjacents(Board, [Row, Column], Rest, NewAcc, Adjacents), !.
