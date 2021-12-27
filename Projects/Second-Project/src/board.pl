@@ -38,10 +38,11 @@ valid_column(Board, NRow, NColumn) :-
 /**
  * Checks if the position is valid on the board
  */
-valid_position(Board, [NRow, NColumn], Piece) :-
+valid_position(Board, Player, [NRow, NColumn], Piece) :-
     valid_row(Board, NRow),
     valid_column(Board, NRow, NColumn),
-    get_piece(Board, [NRow, NColumn], Piece).
+    get_piece(Board, [NRow, NColumn], Piece),
+    Piece =:= Player.
 
 /**
 *
