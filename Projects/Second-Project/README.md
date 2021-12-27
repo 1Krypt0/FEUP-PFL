@@ -39,17 +39,29 @@ play.
 
 # Game description
 
-Five Field Kono is a Korean abstract strategy game. It was first recorded in 1895, by ethnographer Stewart Culin. Like in Chinese checkers, the objective of the game is to move all of one's pieces to the other side of the board, in the starting configuration. The players, at each turn, can move only one piece one square at a time in a diagonal fashion, either forwards or backwards, occupying a vacant position. The first player to occupy all the places left by his opponent at the start of the game, wins the game.
+## Introduction
+
+Five Field Kono is a Korean 2-player abstract strategy game. It was first recorded in 1895, by ethnographer Stewart Culin. Like in Chinese checkers, the objective of the game is to move all of one's pieces to the other side of the board, in the starting configuration. The players, at each turn, can move only one piece one square at a time in a diagonal fashion, either forwards or backwards, occupying a vacant position. The first player to occupy all the places left by his opponent at the start of the game, wins the game.
+
+## Preparing the game
 
 The starting board is a 5x5 square grid. Each player has 7 pieces, placed along the nearest border. A starting configuration will look like this:
 
 ![Starting configuration](./images/starting-configuration.jpg)
+
+## Rules
 
 The rules of the game are simple. As stated before, only diagonal moves are valid, and these can be performed either forward or backwards. At most, a piece will have 4 available moves. The pieces cannot jump over any other piece, and there is no capturing of pieces.
 
 If at any point there are no moves available to any player, a draw occurs.
 
 A game is won when all the players pieces occupy the places vacated by the opponent, in the starting configuration.
+
+## Bibliography
+
+- [Bead Game's Description](https://bead.game/games/traditional/five-field-kono)
+- [A small article from the university of Lisbon](https://www.di.fc.ul.pt/~jpn/gv/kono.htm)
+- [Board and Table Games from Many Civilizations, 2nd ed (p98)](https://ia801606.us.archive.org/33/items/B-001-002-771/B-001-002-771.pdf)
 
 # Game Logic - implement play/0 as starting move (2400 words)
 
