@@ -1,4 +1,3 @@
-:- include('board.pl').
 /**
 *  next_player(+CurrentPlayer, -NextPlayer)
 *
