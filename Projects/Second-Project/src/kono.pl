@@ -1,3 +1,8 @@
+:- include('board.pl').
+:- include('game.pl').
+:- include('utils.pl').
+:- include('view.pl').
+
 /**
 * Initial board configuration
 */
