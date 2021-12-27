@@ -31,6 +31,7 @@ player_symbol(2, '2').
  *  Print Column Numbers
  */
 print_column_numbers :-
+    clear,
     write('        0   1   2   3   4'), nl, !.
 
 
