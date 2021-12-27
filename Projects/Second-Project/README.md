@@ -27,7 +27,7 @@ And if running the game on a terminal:
 
 ```prolog
 
-    consult('./src/glaisher.pl').
+consult('./src/glaisher.pl').
 
 ```
 
@@ -60,6 +60,7 @@ A game is won when all the players pieces occupy the places vacated by the oppon
 ## Bibliography
 
 - [Bead Game's Description](https://bead.game/games/traditional/five-field-kono)
+- [What do we do all day's article](https://www.whatdowedoallday.com/five-field-kono/)
 - [A small article from the university of Lisbon](https://www.di.fc.ul.pt/~jpn/gv/kono.htm)
 - [Board and Table Games from Many Civilizations, 2nd ed (p98)](https://ia801606.us.archive.org/33/items/B-001-002-771/B-001-002-771.pdf)
 
