@@ -29,6 +29,15 @@ move(Board, Player, [Row, Column, Direction], NewBoard) :-
     set_piece(Board, [Row, Column], 0, ResultBoard),
     set_piece(ResultBoard, [DestinationRow, DestinationColumn], Piece, NewBoard).
 
+get_valid_moves(Board, Player, Moves) :-
+    get_player_piece_positions(Board, Player, Positions),
+    get_valid_moves(Board, Positions, [], Moves).
+
+get_valid_moves(_, [], NewAcc, NewAcc).
+get_valid_moves(Board, [Piece | Rest], Acc, Moves) :-
+    get_empty_adjacents(Board, Piece, Adjacents),
+    append(Acc, Adjacents, NewAcc),
+    get_valid_moves(Board, Rest, NewAcc, Moves).
 
 /*
 *  game_over(+Board, -Result)
@@ -49,3 +58,17 @@ game_over([
     [2, _, _, _, 2],
     [2, 2, 2, 2, 2]
 ], 2).
+game_over(Board, 0) :-
+    game_over_player_one(Board, Result1),
+    game_over_player_two(Board, Result2),
+    Result1 =:= 0,
+    Result2 =:= 0.
+game_over(_, -1).
+
+game_over_player_one(Board, Result) :-
+    get_valid_moves(Board, 1, X), !,
+    length(X, Result).
+
+game_over_player_two(Board, Result) :-
+    get_valid_moves(Board, 2, X), !,
+    length(X, Result).
