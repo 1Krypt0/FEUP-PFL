@@ -37,7 +37,19 @@ After this, in both cases, the game should start running the command:
 play.
 ```
 
-# Game description (350 words)
+# Game description
+
+Five Field Kono is a Korean abstract strategy game. It was first recorded in 1895, by ethnographer Stewart Culin. Like in Chinese checkers, the objective of the game is to move all of one's pieces to the other side of the board, in the starting configuration. The players, at each turn, can move only one piece one square at a time in a diagonal fashion, either forwards or backwards, occupying a vacant position. The first player to occupy all the places left by his opponent at the start of the game, wins the game.
+
+The starting board is a 5x5 square grid. Each player has 7 pieces, placed along the nearest border. A starting configuration will look like this:
+
+![Starting configuration](./images/starting-configuration.jpg)
+
+The rules of the game are simple. As stated before, only diagonal moves are valid, and these can be performed either forward or backwards. At most, a piece will have 4 available moves. The pieces cannot jump over any other piece, and there is no capturing of pieces.
+
+If at any point there are no moves available to any player, a draw occurs.
+
+A game is won when all the players pieces occupy the places vacated by the opponent, in the starting configuration.
 
 # Game Logic - implement play/0 as starting move (2400 words)
 
