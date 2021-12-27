@@ -62,7 +62,6 @@ game_over(Board, 0) :-
     game_over_player_two(Board, Result2),
     Result1 =:= 0,
     Result2 =:= 0.
-game_over(_, -1).
 
 game_over_player_one(Board, Result) :-
     get_valid_moves(Board, 1, X), !,
