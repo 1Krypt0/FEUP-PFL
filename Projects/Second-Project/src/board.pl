@@ -44,6 +44,13 @@ valid_position(Board, Player, [NRow, NColumn], Piece) :-
     get_piece(Board, [NRow, NColumn], Piece),
     Piece =:= Player.
 
+valid_position(Board, [NRow, NColumn], Piece) :-
+    valid_row(Board, NRow),
+    valid_column(Board, NRow, NColumn),
+    get_piece(Board, [NRow, NColumn], Piece).
+
+
+
 /**
 *
 *  get_piece(+Board, +[Row, Column], -Piece)
