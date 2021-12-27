@@ -41,12 +41,12 @@ read_position(Board, Player, Row, Column, Moves) :-
 /**
  * Reads a direction from input
  */
-read_direction(Direction, PositionMoves, DirectionMoves) :-
+read_direction(Direction, CurrentPos, PossibleMoves) :-
     repeat,
     write('-> Enter Direction\n0 - NW\t1 - NE\t2 - SW\t3 - SE\nOption: '),
     read_number(Direction),
     (
-        validate_direction(Direction, PositionMoves, DirectionMoves), !
+        validate_direction(Direction, CurrentPos, PossibleMoves), !
         ;
         write('Invalid direction! Cannot move in that direction!\n'), fail
     ), !.
@@ -54,13 +54,12 @@ read_direction(Direction, PositionMoves, DirectionMoves) :-
 /**
  * Reads a move from input
  */
-read_move(Board, Player, [NRow, NColumn, Direction, NStacks, Stacks]) :-
+read_move(Board, Player, [NRow, NColumn, Direction ]) :-
     write('========================================================================='), nl,
-    write('                        Selecting a stack to move                        '), nl,
+    write('                        Selecting a cube to move                        '), nl,
     write('-------------------------------------------------------------------------'), nl,
     read_position(Board, Player, NRow, NColumn, PositionMoves), !,
-    read_direction(Direction, PositionMoves, DirectionMoves), !,
-    read_substack_divisions(NStacks, Stacks, DirectionMoves), !.
+    read_direction(Direction, [NRow, NColumn], PositionMoves), !.
 
 
 /**
@@ -77,24 +76,37 @@ read_placing(Board, [NRow, NColumn]) :-
 /**
  * Checks if a direction is valid or not according to the available moves
  */
-validate_direction(Direction, PositionMoves, DirectionMoves) :-
-    direction(Direction, _, _), !,
-    bagof(
-        Stacks,
-        Direction ^ NStacks ^
-        (
-            member([Direction, NStacks, Stacks], PositionMoves)
-        ),
-        DirectionMoves
-    ),
-    length(DirectionMoves, NMoves), !,
-    NMoves > 0.
-
+validate_direction(Direction, [CurrentRow, CurrentCol], PositionMoves) :-
+    direction(Direction, RowIncrement, ColumnIncrement),
+    DestinationRow is CurrentRow + RowIncrement,
+    DestinationColumn is CurrentCol + ColumnIncrement,
+    member([DestinationRow, DestinationColumn], PositionMoves).
 
 /**
  * Checks if a position is valid or not
  */
-validate_position(Board, RowLetter, Row, Column) :-
+validate_position(Board, Player, RowLetter, Row, Column) :-
     letter(Row, RowLetter), !,
-    valid_position(Board, [Row, Column], Piece),
-    Piece =:= 0.
+    valid_position(Board, Player, [Row, Column], Piece),
+    Piece =:= Player.
+
+/**
+ * Announce the winner
+ */
+announce(1, Player) :-
+    clear,
+    separator, nl,
+    format('                              Player ~d Won                             ', Player), nl, nl,
+    separator.
+
+announce(2, Player) :-
+    clear,
+    separator, nl,
+    format('                              Player ~d Won                             ', Player), nl, nl,
+    separator.
+
+announce(0, _) :-
+    clear,
+    separator, nl,
+    write("                              It's a Draw                             "), nl, nl,
+    separator.

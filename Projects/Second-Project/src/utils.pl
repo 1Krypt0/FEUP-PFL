@@ -18,3 +18,16 @@ letter(13, 'N').
 letter(14, 'O').
 letter(15, 'P').
 letter(16, 'Q').
+
+mymember(X,[X|_]).
+mymember(X,[_|T]) :- mymember(X,T).
+
+not(A) :- \+ call(A).
+
+set([],[]).
+set([H|T],[H|Out]) :-
+    not(mymember(H,T)),
+    set(T,Out).
+set([H|T],Out) :-
+    mymember(H,T),
+    set(T,Out).
