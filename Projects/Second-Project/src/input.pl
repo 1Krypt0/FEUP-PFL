@@ -94,15 +94,17 @@ validate_position(Board, Player, RowLetter, Row, Column) :-
  * Announce the winner
  */
 announce(1, Player) :-
+    next_player(Player, Next),
     clear,
     separator, nl,
-    format('                              Player ~d Won                             ', Player), nl, nl,
+    format('                              Player ~d Won                             ', Next), nl, nl,
     separator.
 
 announce(2, Player) :-
+    next_player(Player, Next),
     clear,
     separator, nl,
-    format('                              Player ~d Won                             ', Player), nl, nl,
+    format('                              Player ~d Won                             ', Next), nl, nl,
     separator.
 
 announce(0, _) :-
