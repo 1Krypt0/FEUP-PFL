@@ -86,12 +86,12 @@ choose_difficulty_option(_) :- write('                             Invalid Optio
  */
 display_main_menu :-
     separator, nl,
-    write('            ________.__         .__       .__                            '), nl,
-    write('           /  _____/|  | _____  |__| _____|  |__   ___________           '), nl,
-    write('          /   \\  ___|  | \\__  \\ |  |/  ___/  |  \\_/ __ \\_  __ \\    '), nl,
-    write('          \\    \\_\\  \\  |__/ __ \\|  |\\___ \\|   Y  \\  ___/|  | \\/ '), nl,
-    write('           \\______  /____(____  /__/____  >___|  /\\___  >__|           '), nl,
-    write('                  \\/          \\/        \\/     \\/     \\/            '), nl, nl,
+    write('                         ____  __.                     '), nl,
+    write('                        |    |/ _|____   ____   ____    '), nl,
+    write('                        |       </  _ \\ /    \\ /  _ \\   '), nl,
+    write('                        |    |  (  <_> )   |  (  <_> )  '), nl,
+    write('                        |____|__ \\____/|___|  /\\____/   '), nl,
+    write('                                \\/          \\/          '), nl, nl,
     write('                           1. Player vs Player                           '), nl,
     write('                          2. Player vs Computer                          '), nl,
     write('                         3. Computer vs Computer                         '), nl, nl,
