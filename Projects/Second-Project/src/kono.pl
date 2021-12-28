@@ -25,15 +25,14 @@ playPvP :-
     playPvP(Board, 1, _).
 
 playPvP(Board, Player, Result) :-
+    game_over(Board, Result),
+    dif(Result, -1), !,
+    announce(Result, Player),
+    pause.
+
+playPvP(Board, Player, Result) :-
     read_move(Board, Player, Move),
     move(Board, Player, Move, NewBoard), !,
     next_player(Player, NextPlayer),
     display_game(NewBoard, NextPlayer), !,
-    (
-        game_over(NewBoard, Result),
-        dif(Result, -1),
-        announce(Result, Player),
-        pause
-        ;
-        playPvP(NewBoard, NextPlayer, Result)
-    ).
+    playPvP(NewBoard, NextPlayer, Result).
