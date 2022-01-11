@@ -60,3 +60,51 @@ count(H, [H | T], Count) :-
 count(Elem, [H | T], Count):-
     count(Elem, T, Count),
     Elem \= H.
+
+
+%
+% Question 6: List Manipulation
+%
+
+% a)
+invert([], []).
+invert([H | T], List) :-
+    invert(T, List1),
+    append(List1, [H], List).
+
+% b)
+del_one(_, [], []).
+del_one(H, [H | T], T).
+del_one(Elem, [H | T], [H | List ]) :-
+    del_one(Elem, T, List),
+    Elem \= H.
+
+% c)
+del_all(_, [], []).
+del_all(H, [H | T], List) :-
+    del_all(H, T, List).
+del_all(Elem, [H | T], [H | Res]) :-
+    del_all(Elem, T, Res).
+
+% d)
+del_all_list([], List1, List1).
+del_all_list(_, [], []).
+del_all_list([Elim | Rest], L, List) :-
+    del_all(Elim, L, List1),
+    del_all_list(Rest, List1, List).
+
+% e)
+del_dups_aux(X, [X | _]).
+del_dups_aux(X, [_ | T]) :-
+    del_dups_aux(X, T).
+notmember(_, []).
+notmember(X, [H | T]) :-
+    X \= H,
+    notmember(X, T).
+del_dups([], []).
+del_dups([H | T], [H | List]) :-
+    notmember(H, T),
+    del_dups(T, List).
+del_dups([H | T], List) :-
+    del_dups_aux(H, T),
+    del_dups(T, List).
