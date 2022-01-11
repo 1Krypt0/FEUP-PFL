@@ -30,8 +30,33 @@ fibonnaci(N, F) :- N > 1,
                    fibonnaci(N2, F2),
                    F is F1+F2.
 
-% d) Implement the predicate isPrime(-X), that determines if X is a prime
-%    number. Remember that a number is prime if it is only divisible by
-%    himself and 1.
-divisible(X, 1).
-divisible(X, D) :- X mod D =:= 0.
+%
+% Question 5: Recursion on Lists
+%
+
+% a)
+list_size([], 0).
+list_size([_ | T], Size) :-
+    list_size(T, Size1),
+    Size is Size1 + 1.
+
+% b)
+list_sum([], 0).
+list_sum([H | T], Sum) :-
+    list_sum(T, Sum1),
+    Sum is Sum1 + H.
+
+% c)
+list_prod([], 1).
+list_prod([H | T], Prod) :-
+    list_prod(T, Prod1),
+    Prod is Prod1 * H.
+
+% d)
+count(_, [], 0).
+count(H, [H | T], Count) :-
+    count(H, T, Count1),
+    Count is Count1 + 1.
+count(Elem, [H | T], Count):-
+    count(Elem, T, Count),
+    Elem \= H.
