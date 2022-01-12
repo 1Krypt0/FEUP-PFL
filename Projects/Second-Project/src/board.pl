@@ -191,3 +191,21 @@ get_empty_adjacents(Board, [Row, Column], [[RowInc, ColInc] | Rest], Acc, Adjace
         NewAcc = Acc
     ),
     get_empty_adjacents(Board, [Row, Column], Rest, NewAcc, Adjacents), !.
+
+get_all_moves(Board, Position, Adjacents) :-
+    directions(Directions),
+    get_all_moves(Board, Position, Directions, [], Adjacents), !.
+
+get_all_moves(_, _, [], Adjacents, Adjacents) :- !.
+get_all_moves(Board, [Row, Column], [[RowInc, ColInc] | Rest], Acc, Adjacents) :-
+    NewRow is Row + RowInc,
+    NewCol is Column + ColInc, !,
+    direction(Dir, RowInc, ColInc),
+    (
+        valid_position(Board, [NewRow, NewCol], Piece),
+        Piece =:= 0,
+        append(Acc, [[Row, Column, Dir]], NewAcc)
+        ;
+        NewAcc = Acc
+    ),
+    get_all_moves(Board, [Row, Column], Rest, NewAcc, Adjacents), !.

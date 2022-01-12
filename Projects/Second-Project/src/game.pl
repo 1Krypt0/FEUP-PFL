@@ -38,6 +38,17 @@ get_valid_moves(Board, [Piece | Rest], Acc, Moves) :-
     append(Acc, Adjacents, NewAcc),
     get_valid_moves(Board, Rest, NewAcc, Moves).
 
+get_player_moves(Board, Player, Moves) :-
+    get_player_piece_positions(Board, Player, Positions),
+    get_player_moves(Board, Positions, [], Moves).
+
+get_player_moves(_, [], NewAcc, NewAcc).
+get_player_moves(Board, [Piece | Rest], Acc, Moves) :-
+    get_all_moves(Board, Piece, Adjacents),
+    append(Acc, Adjacents, NewAcc),
+    get_player_moves(Board, Rest, NewAcc, Moves).
+
+
 /*
 *  game_over(+Board, -Result)
 *
