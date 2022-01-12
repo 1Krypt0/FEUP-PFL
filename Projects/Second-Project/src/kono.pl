@@ -36,3 +36,26 @@ playPvP(Board, Player, Result) :-
     next_player(Player, NextPlayer),
     display_game(NewBoard, NextPlayer), !,
     playPvP(NewBoard, NextPlayer, Result).
+
+playPvC(Bot) :-
+    initial(Board),
+    display_game(Board, 1),
+    playPvC(Board, Bot, 1, _).
+
+playPvC(Board, Bot, Player, Result) :-
+    game_over(Board, Result),
+    dif(Result, -1), !,
+    announce(Result, Player),
+    pause.
+
+playPvC(Board, Bot, Player, Result) :-
+    (
+        Player = 1,
+        read_move(Board, Player, Move)
+        ;
+        choose_move(Board, Player, Bot, Move)
+    ),
+    move(Board, Player, Move, NewBoard), !,
+    next_player(Player, NextPlayer),
+    display_game(NewBoard, NextPlayer), !,
+    playPvC(NewBoard, Bot, NextPlayer, Result).
