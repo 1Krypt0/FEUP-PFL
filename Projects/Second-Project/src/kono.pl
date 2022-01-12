@@ -1,9 +1,13 @@
+:- use_module(library(lists)).
+:- use_module(library(random)).
+
 :- include('game.pl').
 :- include('input.pl').
 :- include('menus.pl').
 :- include('utils.pl').
 :- include('view.pl').
 :- include('board.pl').
+:- include('ai.pl').
 
 play :-
     menu.
@@ -50,11 +54,12 @@ playPvC(Board, Bot, Player, Result) :-
 
 playPvC(Board, Bot, Player, Result) :-
     (
-        Player = 1,
+        Player =:= 1,
         read_move(Board, Player, Move)
         ;
         choose_move(Board, Player, Bot, Move)
     ),
+    write(Move),
     move(Board, Player, Move, NewBoard), !,
     next_player(Player, NextPlayer),
     display_game(NewBoard, NextPlayer), !,
