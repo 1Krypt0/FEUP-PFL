@@ -19,6 +19,7 @@ menu :-
 choose_menu_option(0).
 choose_menu_option(1) :- display_pvp_title, playPvP, !, fail.
 choose_menu_option(2) :- pvc_menu, nl, !, fail.
+choose_menu_option(3) :- cvc_menu, nl, !, fail.
 choose_menu_option(_) :- write('                             Invalid Option!'), nl, !, fail.
 
 
@@ -34,6 +35,25 @@ pvc_menu :-
         ;
         display_pvc_title(Bot),
         playPvC(Bot)
+    ).
+
+/**
+ * Computer vs Computer Menu
+ * Chooses the difficulty of each bot and let them play against each other
+ */
+cvc_menu :-
+    display_cvc_menu,
+    readBotDifficulty(Bot1),
+    (
+        Bot1 = 0
+        ;
+        readBotDifficulty(Bot2),
+        (
+            Bot2 = 0
+            ;
+            display_cvc_title(Bot1-Bot2),
+            playCvC(Bot1, Bot2)
+        )
     ).
 
 
@@ -73,6 +93,7 @@ display_main_menu :-
     write('                                \\/          \\/          '), nl, nl,
     write('                           1. Player vs Player                           '), nl,
     write('                          2. Player vs Computer                          '), nl,
+    write('                         3. Computer vs Computer                         '), nl,
     write('                                 0. Exit                                 '), nl,
     separator, write('                               Option: ').
 
@@ -82,6 +103,13 @@ display_main_menu :-
  */
 display_pvc_menu :-
     nl, write('                            Player vs Computer                           '), nl, nl.
+
+
+/**
+ * Displays Computer vs Computer header
+ */
+display_cvc_menu :-
+    nl, write('                           Computer vs Computer                          '), nl, nl.
 
 
 /**
@@ -102,7 +130,9 @@ display_pvp_title :- separator, write('                             Player vs Pl
 
 
 /**
- * Displays Player vs Computer title
+ * Displays Computer vs Computer title
  */
-display_pvc_title(1) :- separator, write('                                   Easy'), nl, separator.
-display_pvc_title(2) :- separator, write('                                   Hard'), nl, separator.
+display_cvc_title(1-1) :- separator, write('                               Easy vs Easy'), nl, separator.
+display_cvc_title(1-2) :- separator, write('                               Easy vs Hard'), nl, separator.
+display_cvc_title(2-1) :- separator, write('                               Hard vs Easy'), nl, separator.
+display_cvc_title(2-2) :- separator, write('                               Hard vs Hard'), nl, separator.
