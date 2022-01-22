@@ -1,3 +1,8 @@
+
+/** 
+ * choose_move(+GameState, +Player, +Level, -Move)
+ * Returns a random move for a specific player given the current board and the level of the AI.
+ */
 choose_move(Board, Player, 1, Move) :-
     get_player_moves(Board, Player, Moves),
     write(Moves),
@@ -10,16 +15,25 @@ choose_move(Board, Player, 2, Move) :-
     length(TempMove, Length),
     (
         Length =:= 0 ->
-        get_withdraw(Board, Player, Move)
+        choose_withdraw(Board, Player, Move)
         ;
         Move = TempMove
     ), !.
 
+/** 
+ * choose_random_move(+Moves, -Move)
+ * Chooses a random move given a list of possible moves.
+ */
 choose_random_move(Moves, Move) :-
     length(Moves, Length),
     random(0, Length, Index),
     nth0(Index, Moves, Move).
 
+/** 
+ * choose_greedy_move(+Board, +Player, +Moves, -GoodMoves, -TempMove)
+ * Chooses a random move given a list of possible good ones (moves that approximate the player 
+ * of the other end of the board and don't block pieces).
+ */
 choose_greedy_move(_, _, [], GoodMoves, TempMove) :- 
     write(GoodMoves),
     choose_random_move(GoodMoves, TempMove), !.
@@ -69,10 +83,18 @@ choose_greedy_move(Board, 1, [Candidate|Rest], GoodMoves, TempMove) :-
     ),
     choose_greedy_move(Board, 1, Rest, NewMoves, TempMove), !.
 
-get_withdraw(Board, Player, Move) :-
+/** 
+ * choose_withdraw(+Board, +Player, -Move)
+ * Chooses a random move if greedy approach failed (no good move was found).
+ */
+choose_withdraw(Board, Player, Move) :-
     get_player_moves(Board, Player, Moves),
     choose_random_move(Moves, Move).
 
+/** 
+ * simulate_play(+Board, +Player, +Play, -GoodMoves, -NewMoves)
+ * Simulates a play that could block pieces before adding it to the list of GoodMoves.
+ */
 simulate_play(Board, Player, [Row,Column,Direction], GoodMoves, NewMoves) :-
     direction(Direction, RowIncrement, ColumnIncrement),
     DestinationRow is Row + RowIncrement,
@@ -81,6 +103,11 @@ simulate_play(Board, Player, [Row,Column,Direction], GoodMoves, NewMoves) :-
     set_piece(ResultBoard, [DestinationRow, DestinationColumn], Player, NewBoard),
     check_blocked_pieces(NewBoard, [Row,Column,Direction], Player, GoodMoves, NewMoves), !.
 
+/** 
+ * check_blocked_pieces(+NewBoard, +Play, +Player, -GoodMoves, -NewMoves)
+ * Checks if a certain move would block any opponent's piece on important positions of the board, 
+ * using the modified board after the hypothetical play.
+ */
 check_blocked_pieces(Board, [Row,Column,Direction], Player, GoodMoves, NewMoves) :-
     (
         Player =:= 1 ->

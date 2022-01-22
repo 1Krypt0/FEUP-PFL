@@ -23,6 +23,9 @@ initial([
     [1, 1, 1, 1, 1]
 ]).
 
+/** 
+ * Main function called in every turn of a game between two human players
+ */
 playPvP :-
     initial(Board),
     display_game(Board, 1),
@@ -41,7 +44,9 @@ playPvP(Board, Player, Result) :-
     display_game(NewBoard, NextPlayer), !,
     playPvP(NewBoard, NextPlayer, Result).
 
-
+/** 
+ * Main function called in every turn of a game between a human player and a bot
+ */
 playPvC(Bot) :-
     initial(Board),
     display_game(Board, 1),
@@ -66,6 +71,9 @@ playPvC(Board, Bot, Player, Result) :-
     display_game(NewBoard, NextPlayer), !,
     playPvC(NewBoard, Bot, NextPlayer, Result).
 
+/** 
+ * Main function called in every turn of a game between two bots
+ */
 playCvC(Bot1, Bot2) :-
     initial(Board),
     display_game(Board, 1),

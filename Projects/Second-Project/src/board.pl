@@ -126,7 +126,10 @@ set_row([Value | Rest], NCol, NewValue, NCols, CurrentCol, Acc, NewRow) :-
     append(Acc, [Value], NewAcc), !,
     set_row(Rest, NCol, NewValue, NCols, NextCol, NewAcc, NewRow).
 
-
+/** 
+ * get_player_piece_positions(+Board, +Player, -Positions)
+ * Gets the positions in which the player has pieces
+ */
 get_player_piece_positions(Board, Player, Positions) :-
     get_player_piece_positions(Board, Player, [0, 0], [], Positions).
 
@@ -150,6 +153,10 @@ get_player_piece_positions(Board, Player, [Row, Column], Acc, Positions) :-
     NewColumn is 0,
     get_player_piece_positions(Board, Player, [NewRow, NewColumn], Acc, Positions).
 
+/** 
+ * get_empty_positions(+Board, -Positions)
+ * Gets all empty positions in the board
+ */
 get_empty_positions(Board, Positions) :-
     get_empty_positions(Board, [0, 0], [], Positions).
 
@@ -173,6 +180,7 @@ get_empty_positions(Board, [Row, Column], Acc, Positions) :-
     get_empty_positions(Board, [NewRow, NewColumn], Acc, Positions).
 
 /**
+ * get_empty_adjacents(+Board, +Position, -Adjacents) :-
  * Get player stacks adjacent to stack on board
  */
 get_empty_adjacents(Board, Position, Adjacents) :-
@@ -192,6 +200,10 @@ get_empty_adjacents(Board, [Row, Column], [[RowInc, ColInc] | Rest], Acc, Adjace
     ),
     get_empty_adjacents(Board, [Row, Column], Rest, NewAcc, Adjacents), !.
 
+/** 
+ * get_all_moves(+Board, +Position, -Adjacents)
+ * Gets all possible moves from a position (includes row, column and direction) 
+ */
 get_all_moves(Board, Position, Adjacents) :-
     directions(Directions),
     get_all_moves(Board, Position, Directions, [], Adjacents), !.
