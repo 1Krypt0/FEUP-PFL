@@ -1,6 +1,5 @@
 # Five Field Kono
 
-
 ## Five Field Kono_1
 
 | Member                             | Number      | Contribution |
@@ -56,20 +55,24 @@ If at any point there are no moves available to any player, a draw occurs.
 
 A game is won when all the players pieces occupy the places vacated by the opponent, in the starting configuration.
 
+For a more information about the origin and rules of the game, the bibliography section includes relevant links to gain a better understanding of Five Field Kono
+
 ## Game Logic
 
-To create this game using Prolog, we chose the MVC design pattern. Having an understanding of the different components that constitute this project, we believe that separating Model, Controller and View is a good strategy. For a better comprehension of how these elements of the application were implemented, pleaase go through the following points:
+To create this game using Prolog, we chose the MVC design pattern. Having an understanding of the different components that constitute this project, we believe that separating Model, Controller and View is a good strategy. For a better comprehension of how these elements of the application were implemented, please go through the following points:
 
 ### Representation of the internal state of the game
 
-The representation of the board is made through a list of lists, in which each individual list represents a row, and a certain index in all rows represents a column. Each position of the board is either empty ("0") or filled with one, and just one, piece from a player ("1" for Player1 and "2" for Player2). Since the pieces can only move and never leave the board (there is no capturing), there is always 7 pieces from each player and the rest of the areas are empty. <br>
-Our game does not require any other form of representation (e.g. pit with captured pieces), since the whole progress of the game happens in the board. <br>
+The representation of the board is made through a list of lists, in which each individual list represents a row, and a certain index in all rows represents a column. Each position of the board is either empty ("0") or filled with one, and just one, piece from a player ("1" for Player1 and "2" for Player2). Since the pieces can only move and never leave the board (there is no capturing), there are always 7 pieces from each player and the rest of the areas are empty.
+
+Our game does not require any other form of representation (e.g. pit with captured pieces), since the whole progress of the game happens in the board.
 
 ![](./images/initial_board.png)
 
 ### Game state visualization
 
-Before the game starts, the main menu is printed on the console. By choosing an option, different views for particular game settings will appear. In every menu, the functions that deal with the option selected have an implementation for invalid inputs. e.g. In the situation presented above, to choose a specific game setting the user must input 1, 2 or 3; any other input will be considered invalid and an error message will be printed on the console. <br>
+Before the game starts, the main menu is printed on the console. By choosing an option, different views for particular game settings will appear. In every menu, the functions that deal with the option selected have an implementation for invalid inputs. e.g. In the situation presented above, to choose a specific game setting the user must input 1, 2 or 3; any other input will be considered invalid and an error message will be printed on the console.
+
 After the game starts, the interface is filled with the visual representation of the board, which includes the actual 5X5 board, the symbols that illustrate rows (A-E) and columns (0-4), and a box with information of who's turn is it.
 
 ### Move execution - predicate move(+GameState, +Move, -NewGameState) should be used
@@ -100,7 +103,6 @@ After the game starts, the interface is filled with the visual representation of
 - [What do we do all day's article](https://www.whatdowedoallday.com/five-field-kono/)
 - [A small article from the university of Lisbon](https://www.di.fc.ul.pt/~jpn/gv/kono.htm)
 - [Board and Table Games from Many Civilizations, 2nd ed (p98)](https://ia801606.us.archive.org/33/items/B-001-002-771/B-001-002-771.pdf)
-
 
 **Comment the game please**
 **Screenshots can be included**
