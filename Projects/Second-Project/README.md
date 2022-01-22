@@ -1,6 +1,5 @@
 # Five Field Kono
 
-
 ## Five Field Kono_1
 
 | Member                             | Number      | Contribution |
@@ -56,21 +55,27 @@ If at any point there are no moves available to any player, a draw occurs.
 
 A game is won when all the players pieces occupy the places vacated by the opponent, in the starting configuration.
 
+For a more information about the origin and rules of the game, the bibliography section includes relevant links to gain a better understanding of Five Field Kono
+
 ## Game Logic
 
-To create this game using Prolog, we chose the MVC design pattern. Having an understanding of the different components that constitute this project, we believe that separating Model, Controller and View is a good strategy. For a better comprehension of how these elements of the application were implemented, pleaase go through the following points:
+To create this game using Prolog, we chose the MVC design pattern. Having an understanding of the different components that constitute this project, we believe that separating Model, Controller and View is a good strategy. For a better comprehension of how these design model was implemented, the following are the most relevant topics:
 
-### Representation of the internal state of the game
+### Game state Representation
 
-The representation of the board is made through a list of lists, in which each individual list represents a row, and a certain index in all rows represents a column. Each position of the board is either empty ("0") or filled with one, and just one, piece from a player ("1" for Player1 and "2" for Player2). Since the pieces can only move and never leave the board (there is no capturing), there is always 7 pieces from each player and the rest of the areas are empty. <br>
-Our game does not require any other form of representation (e.g. pit with captured pieces), since the whole progress of the game happens in the board. <br>
+The representation of the board is made through a list of lists, in which each individual list represents a row, and a certain index in all rows represents a column. Each position of the board is either empty ("0") or filled with one, and just one, piece from a player ("1" for Player 1 and "2" for Player 2). Since the pieces can only move to other positions and never leave the board (there is no capturing), there are always 7 pieces from each player on the board and the rest of the areas are empty.
 
-![](./images/initial_board.png)
+Our game does not require any other form of representation (e.g. pit with captured pieces), since the whole process of playing the game happens on the board.
 
 ### Game state visualization
 
-Before the game starts, the main menu is printed on the console. By choosing an option, different views for particular game settings will appear. In every menu, the functions that deal with the option selected have an implementation for invalid inputs. e.g. In the situation presented above, to choose a specific game setting the user must input 1, 2 or 3; any other input will be considered invalid and an error message will be printed on the console. <br>
+Before the game starts, the main menu is printed on the console. By choosing an option, different views for particular game settings will appear. In every menu, the functions that deal with the selected option have an implementation for invalid inputs. e.g. In the starting menu, to choose a specific game setting, the user must input 1, 2 or 3; any other input will be considered invalid and an error message will be printed on the console.
+
 After the game starts, the interface is filled with the visual representation of the board, which includes the actual 5X5 board, the symbols that illustrate rows (A-E) and columns (0-4), and a box with information of who's turn is it.
+
+Below is a representation of the initial state of the board.
+
+![](./images/initial_board.png)
 
 ### Move execution - predicate move(+GameState, +Move, -NewGameState) should be used
 
@@ -82,15 +87,19 @@ After the game starts, the interface is filled with the visual representation of
 
 ### Choosing the computer's move - Have a difficulty level attributed (OPTIONAL HAVING MORE THAN ONE LEVEL), using the predicate choose_move(+GameState, +Level, -Move)
 
-## Conclusion (250 words)
+## Conclusion
 
 ### Final remarks
 
-#### Positives
+The project accomplishes all that was proposed to complete, and all features work as intended. Even greater than that, it helped to massively improve the understanding of the Prolog language, and to understand the use cases and utility of a programming paradigm like logical programming in the context of game development.
 
-#### Known issues
+### Known issues
+
+Whilst we consider the project satisfactory, there are some issues that could be addressed. For one, there is some unnecessary code repetition, as time constraints didn't allow enough time to refactor this. Secondly, a medium difficulty could have been implemented, which would allow for even more levels of play. Finally, the hard bot could have been developed with a more complex strategy, which included more scenarios and game factors but once again due to time constraints it was decided to stick to a simpler version, with a strategy that appears to function sufficiently well.
 
 ### Roadmap
+
+For a future development this game could be made with a more complex bot, taking into account more factors and maybe even using artificial intelligence. Also, a refactor to remove the repeated code was at hand, and finally a worthy long-term improvement is to make the game distributed, allowing players in different computers to challenge each other, leading to an even better game experience.
 
 ## Bibliography - Books, articles and other web resources used for developing the work.
 
@@ -100,7 +109,6 @@ After the game starts, the interface is filled with the visual representation of
 - [What do we do all day's article](https://www.whatdowedoallday.com/five-field-kono/)
 - [A small article from the university of Lisbon](https://www.di.fc.ul.pt/~jpn/gv/kono.htm)
 - [Board and Table Games from Many Civilizations, 2nd ed (p98)](https://ia801606.us.archive.org/33/items/B-001-002-771/B-001-002-771.pdf)
-
 
 **Comment the game please**
 **Screenshots can be included**
