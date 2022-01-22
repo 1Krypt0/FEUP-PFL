@@ -93,17 +93,13 @@ Below is a representation of the initial state of the board.
 
 The project accomplishes all that was proposed to complete, and all features work as intended. Even greater than that, it helped to massively improve the understanding of the Prolog language, and to understand the use cases and utility of a programming paradigm like logical programming in the context of game development.
 
-#### Positives
+### Known issues
 
-The greatest assets of the project were the architecture chosen, as an MVC approach led to much better separation of responsibilities, and the implementation of an easy and hard bots, as well as a Computer vs Computer mode, which allowed to see different ways of playing the game. Overall, we are satisfied with the work presented, and it would constitute a great basis for future improvement.
-
-#### Known issues
-
-Whilst we consider the project satisfactory, there are some issues that could be treated with some simple refactors. For one, there is some unnecessary code repetition, as time constraints didn't allow enough time to refactor this small software rot. Secondly, a medium difficulty could have been implemented, which would choose at random sometimes, and others at a good level of play. Finally, the hard bot could have been developed with a more complex strategy, which included more scenarios and game factors but once again due to time constraints it was decided to stick to a simpler version, with a strategy that appears to function correctly.
+Whilst we consider the project satisfactory, there are some issues that could be addressed. For one, there is some unnecessary code repetition, as time constraints didn't allow enough time to refactor this. Secondly, a medium difficulty could have been implemented, which would allow for even more levels of play. Finally, the hard bot could have been developed with a more complex strategy, which included more scenarios and game factors but once again due to time constraints it was decided to stick to a simpler version, with a strategy that appears to function sufficiently well.
 
 ### Roadmap
 
-For a future development this game could be made with a more complex bot, taking into account more factors and maybe even learning from the games played, allowing different strategies each game and making it a more challenging opponent. Also, a refactor to remove the repeated code was at hand, and finally a worthy long-term improvement is to make the game distributed, allowing players in different computers to challenge each other, leading to an even better game experience.
+For a future development this game could be made with a more complex bot, taking into account more factors and maybe even using artificial intelligence. Also, a refactor to remove the repeated code was at hand, and finally a worthy long-term improvement is to make the game distributed, allowing players in different computers to challenge each other, leading to an even better game experience.
 
 ## Bibliography - Books, articles and other web resources used for developing the work.
 
