@@ -67,15 +67,15 @@ The representation of the board is made through a list of lists, in which each i
 
 Our game does not require any other form of representation (e.g. pit with captured pieces), since the whole process of playing the game happens on the board.
 
+### Game state visualization
+
+Before the game starts, the main menu is printed on the console. By choosing an option, different views for particular game settings will appear. In every menu, the functions that deal with the selected option have an implementation for invalid inputs. e.g. In the starting menu, to choose a specific game setting, the user must input 1, 2 or 3; any other input will be considered invalid and an error message will be printed on the console.
+
+After the game starts, the interface is filled with the visual representation of the board, which includes the actual 5X5 board, the symbols that illustrate rows (A-E) and columns (0-4), and a box with information of who's turn is it.
+
 Below is a representation of the initial state of the board.
 
 ![](./images/initial_board.png)
-
-### Game state visualization
-
-Before the game starts, the main menu is printed on the console. By choosing an option, different views for particular game settings will appear. In every menu, the functions that deal with the option selected have an implementation for invalid inputs. e.g. In the situation presented above, to choose a specific game setting the user must input 1, 2 or 3; any other input will be considered invalid and an error message will be printed on the console.
-
-After the game starts, the interface is filled with the visual representation of the board, which includes the actual 5X5 board, the symbols that illustrate rows (A-E) and columns (0-4), and a box with information of who's turn is it.
 
 ### Move execution - predicate move(+GameState, +Move, -NewGameState) should be used
 
