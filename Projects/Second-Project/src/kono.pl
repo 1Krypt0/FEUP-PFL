@@ -47,7 +47,7 @@ playPvC(Bot) :-
     display_game(Board, 1),
     playPvC(Board, Bot, 1, _).
 
-playPvC(Board, Bot, Player, Result) :-
+playPvC(Board, _, Player, Result) :-
     game_over(Board, Result),
     dif(Result, -1), !,
     announce(Result, Player),
@@ -72,7 +72,7 @@ playCvC(Bot1, Bot2) :-
     pause,
     playCvC(Board, Bot1, Bot2, 1, _).
 
-playCvC(Board, Bot1, Bot2, Player, Result) :-
+playCvC(Board, _, _, Player, Result) :-
     game_over(Board, Result),
     dif(Result, -1), !,
     announce(Result, Player),
