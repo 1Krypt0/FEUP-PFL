@@ -79,23 +79,23 @@ Below is a representation of the initial state of the board.
 
 ### Move execution
 
-To perform the action of moving a piece, inputs for row, column and direction are required and validated given the current state of the board. In order to validate a move in Kono, not only must the position chosen be occupied by a player's piece, the direction must indicate to a valid and empty spot in the board. After validation, the play is executed and the board is modified with the new setting.
+To perform the action of moving a piece, inputs for row, column and direction are required and validated given the current state of the board. In order to validate a move in Kono, not only must the position chosen be occupied by a player's piece, the direction must indicate to a valid and empty spot in the board. After validation, the play is executed and the board is modified with the new setting. To ensure this execution, we created the predicate move(+Board, +Player, +Move, -Board).
 
 ### End Game
 
-Checking if the game is over is very simple - either one of the players has all of their pieces on the opponent's starting positions or both of them do, and that means it's a tie. In order to identify this situation, a function is responsible for comparing the current board to the two settings that indicate the end of the game. When it is over, the game flow is interrupted and a winner is declared.
+Checking if the game is over is very simple - either one of the players has all of their pieces on the opponent's starting positions or both of them do, and that means it's a tie. In order to identify this situation, a function is responsible for comparing the current board to the two settings that indicate the end of the game. When it is over, the game flow is interrupted and a winner is declared. The predicate for this section was implemented as sugested: game_over(+Board, -Result).
 
 ### List of Valid Moves
 
-
+To get all valid moves, the only important point regarding game rules is that players can only move into the empty spots on the board. Besides this point, the validation must consider the board limits. Our predicate valid_moves(+Board, +Player, -Moves) includes the information about the player, in order to check all valid moves after locating the correct pieces and evaluating the spots diagonally to it.
 
 ### Evaluating the game's state
 
-Since Five Field Kono doesn't include point acumulation or capturing pieces from the opponent, it is hard to define a value for each player at any given moment that isn't the end of the game. Knowing that, the concept of game state evaluation on a normal Player vs Player game wasn't implemented, but the game state is taken under consideration for the greedy algorithm. In order to make good inclusions of possible moves for a certain player, it is important to know if an opponent's piece will be blocked in its starting position. Since our AI approach is very offensive, in that situation the bot will try to move forward again but will be stopped by the opponent's piece. To prevent that, the play is simulated and the resulting board is evaluated before including said move in the list of good moves.
+Since Five Field Kono doesn't include point acumulation or capturing pieces from the opponent, it is hard to define a value for each player at any given moment that isn't the end of the game. Knowing that, the concept of game state evaluation on a normal Player vs Player game wasn't implemented, but the game state is taken under consideration for the greedy algorithm. In order to make good inclusions of possible moves for a certain player, it is important to know if an opponent's piece would be blocked in its starting position. Since our AI approach is offensive, in that situation the bot would try to move forward again but would be stopped by the opponent's piece. To prevent that, the play is simulated and the resulting board is evaluated before including said move in the list of good moves. The sugested predicate for this section was not implemented.
 
 ### Choosing the computer's move
 
-Two different bots were implemented to play against a human player, or another bot. The easy one doesn't have any criterion for choosing its next move; the hard one will always try to choose a random move from a list of greedy ones - moves that go forward on the board, and don't block an opponent's piece in a starting position. In order to do that, the direction of each possible move is analysed and when the piece is in the middle of the board, a simulation of the play is done to prevent unwanted blocking.
+Two different bots were implemented to play against a human player, or another bot. The easy one doesn't have any criterion for choosing its next move; the hard one will always try to choose a random move from a list of greedy ones - moves that go forward on the board, and don't block an opponent's piece in a starting position. In order to do that, the direction of each possible move is analysed and when the piece is in the middle of the board, a simulation of the play is done to prevent unwanted blocking. The predicate created was choose_move(+GameState, +Player, +Level, -Move), that has information about the player to guarantee that in the greedy approach Player1 moves up and Player2 moves down.
 
 ## Conclusion
 
