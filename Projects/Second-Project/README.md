@@ -59,13 +59,15 @@ For a more information about the origin and rules of the game, the bibliography 
 
 ## Game Logic
 
-To create this game using Prolog, we chose the MVC design pattern. Having an understanding of the different components that constitute this project, we believe that separating Model, Controller and View is a good strategy. For a better comprehension of how these elements of the application were implemented, please go through the following points:
+To create this game using Prolog, we chose the MVC design pattern. Having an understanding of the different components that constitute this project, we believe that separating Model, Controller and View is a good strategy. For a better comprehension of how these design model was implemented, the following are the most relevant topics:
 
-### Representation of the internal state of the game
+### Game state Representation
 
-The representation of the board is made through a list of lists, in which each individual list represents a row, and a certain index in all rows represents a column. Each position of the board is either empty ("0") or filled with one, and just one, piece from a player ("1" for Player1 and "2" for Player2). Since the pieces can only move and never leave the board (there is no capturing), there are always 7 pieces from each player and the rest of the areas are empty.
+The representation of the board is made through a list of lists, in which each individual list represents a row, and a certain index in all rows represents a column. Each position of the board is either empty ("0") or filled with one, and just one, piece from a player ("1" for Player 1 and "2" for Player 2). Since the pieces can only move to other positions and never leave the board (there is no capturing), there are always 7 pieces from each player on the board and the rest of the areas are empty.
 
-Our game does not require any other form of representation (e.g. pit with captured pieces), since the whole progress of the game happens in the board.
+Our game does not require any other form of representation (e.g. pit with captured pieces), since the whole process of playing the game happens on the board.
+
+Below is a representation of the initial state of the board.
 
 ![](./images/initial_board.png)
 
