@@ -77,15 +77,25 @@ Below is a representation of the initial state of the board.
 
 ![](./images/initial_board.png)
 
-### Move execution - predicate move(+GameState, +Move, -NewGameState) should be used
+### Move execution
 
-### End Game - predicate game_over(+GameState, -Winner) should be used
+To perform the action of moving a piece, inputs for row, column and direction are required and validated given the current state of the board. In order to validate a move in Kono, not only must the position chosen be occupied by a player's piece, the direction must indicate to a valid and empty spot in the board. After validation, the play is executed and the board is modified with the new setting.
 
-### List of Valid Moves - predicate valid_moves(+GameState, -ListOfMoves) is the one to choose.
+### End Game
 
-### Evaluating the game's state (OPTIONAL) - use the predicate value(+GameState, +Player, -Value)
+Checking if the game is over is very simple - either one of the players has all of their pieces on the opponent's starting positions or both of them do, and that means it's a tie. In order to identify this situation, a function is responsible for comparing the current board to the two settings that indicate the end of the game. When it is over, the game flow is interrupted and a winner is declared.
 
-### Choosing the computer's move - Have a difficulty level attributed (OPTIONAL HAVING MORE THAN ONE LEVEL), using the predicate choose_move(+GameState, +Level, -Move)
+### List of Valid Moves
+
+
+
+### Evaluating the game's state
+
+Since Five Field Kono doesn't include point acumulation or capturing pieces from the opponent, it is hard to define a value for each player at any given moment that isn't the end of the game. Knowing that, the concept of game state evaluation on a normal Player vs Player game wasn't implemented, but the game state is taken under consideration for the greedy algorithm. In order to make good inclusions of possible moves for a certain player, it is important to know if an opponent's piece will be blocked in its starting position. Since our AI approach is very offensive, in that situation the bot will try to move forward again but will be stopped by the opponent's piece. To prevent that, the play is simulated and the resulting board is evaluated before including said move in the list of good moves.
+
+### Choosing the computer's move
+
+Two different bots were implemented to play against a human player, or another bot. The easy one doesn't have any criterion for choosing its next move; the hard one will always try to choose a random move from a list of greedy ones - moves that go forward on the board, and don't block an opponent's piece in a starting position. In order to do that, the direction of each possible move is analysed and when the piece is in the middle of the board, a simulation of the play is done to prevent unwanted blocking.
 
 ## Conclusion
 
@@ -101,7 +111,6 @@ Whilst we consider the project satisfactory, there are some issues that could be
 
 For a future development this game could be made with a more complex bot, taking into account more factors and maybe even using artificial intelligence. Also, a refactor to remove the repeated code was at hand, and finally a worthy long-term improvement is to make the game distributed, allowing players in different computers to challenge each other, leading to an even better game experience.
 
-## Bibliography - Books, articles and other web resources used for developing the work.
 
 ## Bibliography
 
