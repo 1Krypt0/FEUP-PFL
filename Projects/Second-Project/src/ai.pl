@@ -5,12 +5,10 @@
  */
 choose_move(Board, Player, 1, Move) :-
     get_player_moves(Board, Player, Moves),
-    write(Moves),
     choose_random_move(Moves, Move), !.
 
 choose_move(Board, Player, 2, Move) :-
     get_player_moves(Board, Player, AllMoves),
-    write(AllMoves),
     choose_greedy_move(Board, Player, AllMoves, _, TempMove),
     length(TempMove, Length),
     (
@@ -35,11 +33,9 @@ choose_random_move(Moves, Move) :-
  * of the other end of the board and don't block pieces).
  */
 choose_greedy_move(_, _, [], GoodMoves, TempMove) :- 
-    write(GoodMoves),
     choose_random_move(GoodMoves, TempMove), !.
 
 choose_greedy_move(Board, 2, [Candidate|Rest], GoodMoves, TempMove) :-
-    write(Candidate),
     (
         nth0(2, Candidate, 2) ->
         (

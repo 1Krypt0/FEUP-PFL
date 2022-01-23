@@ -155,6 +155,13 @@ display_difficulty_menu :-
 display_pvp_title :- separator, write('                             Player vs Player'), nl, separator.
 
 
+/**
+ * Displays Player vs Computer title
+ */
+display_pvc_title(1) :- separator, write('                                   Easy'), nl, separator.
+display_pvc_title(2) :- separator, write('                                   Hard'), nl, separator.
+
+
 /*
 * display_cvc_title(+Bot1Option, +Bot2Option)
 *

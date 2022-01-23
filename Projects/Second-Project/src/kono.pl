@@ -65,7 +65,6 @@ playPvC(Board, Bot, Player, Result) :-
         ;
         choose_move(Board, Player, Bot, Move)
     ),
-    write(Move),
     move(Board, Player, Move, NewBoard), !,
     next_player(Player, NextPlayer),
     display_game(NewBoard, NextPlayer), !,
@@ -93,7 +92,6 @@ playCvC(Board, Bot1, Bot2, Player, Result) :-
         ;
         choose_move(Board, Player, Bot2, Move)
     ),
-    write(Move),
     move(Board, Player, Move, NewBoard), !,
     next_player(Player, NextPlayer),
     display_game(NewBoard, NextPlayer), !,
