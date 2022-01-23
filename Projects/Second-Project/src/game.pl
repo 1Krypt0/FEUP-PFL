@@ -19,6 +19,12 @@ validate_move(Board, [Row, Column, Direction], Player) :-
     valid_position(Board, [DestinationRow, DestinationColumn], DestinationPiece),
     DestinationPiece =:= 0.
 
+/*
+* move(+Board, +Player, [+Row, +Column, +Direction], -NewBoard)
+*
+* Moves a piece from Player in Board, At the Row and Column, in the Direction
+* given, returning the new state of the board.
+*/
 move(Board, Player, [Row, Column, Direction], NewBoard) :-
     validate_move(Board, [Row, Column, Direction], Player),
     get_piece(Board, [Row, Column], Piece),
@@ -28,31 +34,38 @@ move(Board, Player, [Row, Column, Direction], NewBoard) :-
     set_piece(Board, [Row, Column], 0, ResultBoard),
     set_piece(ResultBoard, [DestinationRow, DestinationColumn], Piece, NewBoard).
 
+/*
+* get_valid_moves(+Board, +Player, -Moves)
+*
+* Retrieves the valid moves for Player
+*/
 get_valid_moves(Board, Player, Moves) :-
     get_player_piece_positions(Board, Player, Positions),
     get_valid_moves(Board, Positions, [], Moves).
-
 get_valid_moves(_, [], NewAcc, NewAcc).
 get_valid_moves(Board, [Piece | Rest], Acc, Moves) :-
     get_empty_adjacents(Board, Piece, Adjacents),
     append(Acc, Adjacents, NewAcc),
     get_valid_moves(Board, Rest, NewAcc, Moves).
 
+/*
+* get_player_moves(+Board, +Player, -Moves)
+*
+* Returns all moves available to Player
+*/
 get_player_moves(Board, Player, Moves) :-
     get_player_piece_positions(Board, Player, Positions),
     get_player_moves(Board, Positions, [], Moves).
-
 get_player_moves(_, [], NewAcc, NewAcc).
 get_player_moves(Board, [Piece | Rest], Acc, Moves) :-
     get_all_moves(Board, Piece, Adjacents),
     append(Acc, Adjacents, NewAcc),
     get_player_moves(Board, Rest, NewAcc, Moves).
 
-
 /*
 *  game_over(+Board, -Result)
 *
-*  Checks if a game is won by comparing to the two possible final states
+*  Checks if a game is won by comparing the three possible final states
 */
 game_over([
     [1, 1, 1, 1, 1],
