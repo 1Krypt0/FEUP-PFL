@@ -111,13 +111,9 @@ Whilst we consider the project satisfactory, there are some issues that could be
 
 For a future development this game could be made with a more complex bot, taking into account more factors and maybe even using artificial intelligence. Also, a refactor to remove the repeated code was at hand, and finally a worthy long-term improvement is to make the game distributed, allowing players in different computers to challenge each other, leading to an even better game experience.
 
-
 ## Bibliography
 
 - [Bead Game's Description](https://bead.game/games/traditional/five-field-kono)
 - [What do we do all day's article](https://www.whatdowedoallday.com/five-field-kono/)
 - [A small article from the university of Lisbon](https://www.di.fc.ul.pt/~jpn/gv/kono.htm)
 - [Board and Table Games from Many Civilizations, 2nd ed (p98)](https://ia801606.us.archive.org/33/items/B-001-002-771/B-001-002-771.pdf)
-
-**Comment the game please**
-**Screenshots can be included**
