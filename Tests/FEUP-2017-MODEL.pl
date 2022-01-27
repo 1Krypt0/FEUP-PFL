@@ -86,3 +86,26 @@ allPerfs :-
     format('~d:~s:', [Id, Performance]), write(Times), nl,
     fail.
 allPerfs :- true.
+
+% Question 6:
+countSuccessfulAux([Participant | Rest], Acc, T) :-
+    performance(Participant, Times),
+    sumTimes(Times, Total),
+    length(Times, Length),
+    Total =:= 120 * Length,
+    NewAcc is Acc + 1,
+    countSuccessfulAux(Rest, NewAcc, T).
+countSuccessfulAux([Participant | Rest], Acc, T) :-
+    performance(Participant, Times),
+    sumTimes(Times, Total),
+    length(Times, Length),
+    Total =\= 120 * Length,
+    countSuccessfulAux(Rest, NewAcc, T).
+countSuccessfulAux([], T, T).
+
+countSuccessful(Participants, T) :-
+    countSuccessfulAux(Participants, 0, T).
+
+nSuccessfulParticipants(T) :-
+    getParticipants([], Participants),
+    countSuccessful(Participants, T).
