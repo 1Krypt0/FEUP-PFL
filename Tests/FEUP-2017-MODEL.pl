@@ -34,3 +34,28 @@ getTimes([Participant | Rest], JuriMember, Acc, Times, Sum, Total) :-
 
 juriTimes(Participants, JuriMember, Times, Total) :-
     getTimes(Participants, JuriMember, [], Times, 0, Total).
+
+% Question 3
+getParticipants(Acc, Participants):-
+    participant(Participant, _, _),
+    performance(Participant, _),
+    \+ member(Participant, Acc), !,
+    getParticipants([ Participant | Acc], Participants).
+getParticipants(Participants, Participants).
+
+isPatient([ Head | Rest ], Acc, Total) :-
+    Head =:= 120,
+    NewAcc is Acc + 1,
+    isPatient(Rest, NewAcc, Total).
+isPatient([Head | Rest], Acc, Total) :-
+    Head =\= 120,
+    isPatient(Rest, Acc, Total).
+isPatient([], Total, Total).
+
+patientJuri(JuriMember) :-
+    getParticipants([], Participants),
+    juriTimes(Participants, JuriMember, Times, _),
+    isPatient(Times, 0, Total),
+    Total >= 2.
+
+% Question 4:
