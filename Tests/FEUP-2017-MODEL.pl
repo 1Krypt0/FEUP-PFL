@@ -59,3 +59,22 @@ patientJuri(JuriMember) :-
     Total >= 2.
 
 % Question 4:
+sumTimes([], 0).
+sumTimes([H | T], Total) :-
+    sumTimes(T, NewTotal),
+    Total is NewTotal + H.
+
+bestParticipant(P1, P2, P) :-
+    performance(P1, Times1),
+    performance(P2, Times2),
+    sumTimes(Times1, Total1),
+    sumTimes(Times2, Total2),
+    Total1 > Total2,
+    P = P1.
+bestParticipant(P1, P2, P) :-
+    performance(P1, Times1),
+    performance(P2, Times2),
+    sumTimes(Times1, Total1),
+    sumTimes(Times2, Total2),
+    Total2 > Total1,
+    P = P2.
