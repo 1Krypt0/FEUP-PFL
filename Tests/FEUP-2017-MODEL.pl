@@ -78,3 +78,11 @@ bestParticipant(P1, P2, P) :-
     sumTimes(Times2, Total2),
     Total2 > Total1,
     P = P2.
+
+% Question 5:
+allPerfs :-
+    participant(Id, _, Performance),
+    performance(Id, Times),
+    format('~d:~s:', [Id, Performance]), write(Times), nl,
+    fail.
+allPerfs :- true.
