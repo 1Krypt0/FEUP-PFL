@@ -100,7 +100,7 @@ countSuccessfulAux([Participant | Rest], Acc, T) :-
     sumTimes(Times, Total),
     length(Times, Length),
     Total =\= 120 * Length,
-    countSuccessfulAux(Rest, NewAcc, T).
+    countSuccessfulAux(Rest, Acc, T).
 countSuccessfulAux([], T, T).
 
 countSuccessful(Participants, T) :-
@@ -109,3 +109,62 @@ countSuccessful(Participants, T) :-
 nSuccessfulParticipants(T) :-
     getParticipants([], Participants),
     countSuccessful(Participants, T).
+
+% Question 7:
+getJuriFansAux([Time | Rest], Acc, Idx, JuriFans) :-
+    Time =:= 120,
+    append(Acc, [Idx], NewAcc),
+    NewIdx is Idx + 1,
+    getJuriFansAux(Rest, NewAcc, NewIdx, JuriFans).
+getJuriFansAux([Time | Rest], Acc, Idx, JuriFans) :-
+    Time =\= 120,
+    NewIdx is Idx + 1,
+    getJuriFansAux(Rest, Acc, NewIdx, JuriFans).
+getJuriFansAux([], JuriFans, _, JuriFans).
+
+getJuriFans(Times, JuriFans) :-
+    getJuriFansAux(Times, [], 1, JuriFans).
+
+getFansAux([Participant | Rest], Acc, Fans) :-
+    performance(Participant, Times),
+    getJuriFans(Times, JuriFans),
+    append(Acc, [Participant-JuriFans], NewAcc),
+    getFansAux(Rest, NewAcc, Fans).
+getFansAux([], Fans, Fans).
+
+getFans(Participants, Fans) :-
+    getFansAux(Participants, [], Fans).
+
+juriFans(L) :-
+    getParticipants([], Participants),
+    getFans(Participants, L).
+
+% Question 8
+:- use_module(library(lists)).
+
+take(_, [], Result, Result).
+take(0, _, Result, Result).
+take(N, [Head | Rest], Acc, Result) :-
+    NewN is N - 1,
+    append(Acc, [Head], NewAcc),
+    take(NewN, Rest, NewAcc, Result).
+
+eligibleOutcome(Id, Performance, TT) :-
+    performance(Id, Times),
+    madeItThrough(Id),
+    participant(Id, _, Performance),
+    sumlist(Times, TT).
+
+nextPhase(N, Participants) :-
+    findall(
+        TT-Id-Perf,
+        (
+            eligibleOutcome(Id, Perf, TT)
+        ),
+        List
+    ),
+    sort(List, NewList),
+    length(NewList, Len),
+    Len >= N,
+    reverse(NewList, ReverseList),
+    take(N, ReverseList, [], Participants).
